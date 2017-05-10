@@ -1,7 +1,5 @@
 ---
 title: "Mineração de dados utilizando álgebra linear"
-author: "Pedro Menezes de Araújo"
-date: "7 de maio de 2017"
 output: html_document
 ---
 
