@@ -2,8 +2,7 @@
 title: "Mineração de dados utilizando álgebra linear"
 author: "Pedro Menezes de Araújo"
 date: "7 de maio de 2017"
-output: pdf_document
-fontsize: 20pt
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Nunca houve tanta abundância de dados como no século XXI, vivemos uma sociedade que produz quantidades absurdas de dados brutos, mas pouca informação. A mineração de dados busca por meio de técnicas matemáticas, tendo como ferramenta o computador, extrair informação relavante de certos conjuntos de dados.
 
 ## Objetivo
-Esse trabalho tem por finalidade aprensentar uma estratégia de mineração usando a álgebra linear como instrumento de mineração de dados. A técnica utilizada foi a **decomposição por valores singulares** expressa por $M=U\Sigma V^t$. O banco de dados utilizado pode ser encontrado em: "https://archive.ics.uci.edu/ml/datasets/Breast+Tissue", o arquivo está no foramto _xlsx_. Se trata de um problema de classificação, cujo o objetivo é classificar diferentes tipos de tecido mamário de acordo com medidas físicas relacionadas a reação de difentes tipos de tecidos memários ao serem expostos a eletricidade.
+Esse trabalho tem por finalidade aprensentar uma estratégia de mineração usando a álgebra linear como instrumento de mineração de dados. A técnica utilizada foi a **decomposição por valores singulares** expressa por $M=U\Sigma V^t$. O banco de dados utilizado pode ser encontrado em: https://archive.ics.uci.edu/ml/datasets/Breast+Tissue, o arquivo está no foramto _xlsx_. Se trata de um problema de classificação, cujo o objetivo é classificar diferentes tipos de tecido mamário de acordo com medidas físicas relacionadas a reação de difentes tipos de tecidos memários ao serem expostos a eletricidade.
 
 ## Organização
  * Outputs
@@ -28,8 +27,7 @@ As saídas apresentadas no trabalho se resumem ao gráfico dos valores singulares 
 
 
 # Inputs
-Com os dados carregados, foi possível fazer a decomposição por valores singulares. Abaixo as primeiras cinco observações da matriz original. As variávis descritas são:  
-$$\newline$$ $$\newline$$ $$\newline$$
+Com os dados carregados, foi possível fazer a decomposição por valores singulares. Abaixo as primeiras cinco observações da matriz original. As variávis descritas são:
 
  * I0: resistência (em ohm) na frequência zero. 
  * PA500: ângulo de fase a 500KHz.
