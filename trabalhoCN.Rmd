@@ -1,0 +1,119 @@
+---
+title: "Mineração de dados utilizando álgebra linear"
+author: "Pedro Menezes de Araújo"
+date: "7 de maio de 2017"
+output: pdf_document
+fontsize: 20pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introdução
+## Motivação
+Nunca houve tanta abundância de dados como no século XXI, vivemos uma sociedade que produz quantidades absurdas de dados brutos, mas pouca informação. A mineração de dados busca por meio de técnicas matemáticas, tendo como ferramenta o computador, extrair informação relavante de certos conjuntos de dados.
+
+## Objetivo
+Esse trabalho tem por finalidade aprensentar uma estratégia de mineração usando a álgebra linear como instrumento de mineração de dados. A técnica utilizada foi a **decomposição por valores singulares** expressa por $M=U\Sigma V^t$. O banco de dados utilizado pode ser encontrado em: "https://archive.ics.uci.edu/ml/datasets/Breast+Tissue", o arquivo está no foramto _xlsx_. Se trata de um problema de classificação, cujo o objetivo é classificar diferentes tipos de tecido mamário de acordo com medidas físicas relacionadas a reação de difentes tipos de tecidos memários ao serem expostos a eletricidade.
+
+## Organização
+ * Outputs
+ * Inputs
+ * Métodos
+ * Conclusão
+
+# Outputs
+As saídas apresentadas no trabalho se resumem ao gráfico dos valores singulares da matriz $\Sigma$ da decomposição, gráfico da matriz $U$ com o posto reduzido e algumas observações da matriz original e da matriz aproximada com os valores singulares mais significativos. A norma de Frobenius também é utilizada como medida de similaridade, para descrever o quão parecida é a matriz original em relação à aproximada.
+
+
+# Inputs
+Com os dados carregados, foi possível fazer a decomposição por valores singulares. Abaixo as primeiras cinco observações da matriz original. As variávis descritas são:  
+$$\newline$$ $$\newline$$ $$\newline$$
+
+ * I0: resistência (em ohm) na frequência zero. 
+ * PA500: ângulo de fase a 500KHz.
+ * HFS: inclinação de alta-frequência do ângulo de fase.
+ * DA: resistência entre as extremidades dos espectros.
+ * AREA: área sobre o espectro.
+ * A/DA: área normalizada pela DA.
+ * MAX IP: máximo do espectro.
+ * DR: distância entre I0 e parte real do ponto de frequência máxima. 
+ * P: tamanho da curva espectral.
+
+E as classes de tecido são: car (carcinoma), fad (fibroadenona), gla (glandular), con (conectivo), adi (adiposo) e mas (mastopatia).
+
+
+```{r echo = F}
+library(dplyr, warn.conflicts = F)
+library(ggplot2)
+library(matrixcalc)
+#loading the data
+my_data <- read.csv2('c:/users/pedro/desktop/data.csv')
+my_sdv <- my_data[,-c(1,2)] %>% as.matrix() %>% svd()
+my_matrix <- my_data[,-c(1,2)] %>% as.matrix %>% round(3)
+head(my_matrix)
+```
+Essa matriz foi decomposta em três matrizes, seguindo a definição da decomposição por valores singulares.  
+E em seguida foram gerados gráficos para os valores singulares e a matriz $U$ com posto reduzido.  
+
+
+# Métodos
+O método, como já foi falado, foi a Decomposição por Valores Singulares $M=U\Sigma V^t$. $U$ é chamada de vetores singulares à esquerda, a diagonal principal de $\Sigma$ contém os vetores singulares e $V$ é a matriz de valores singulares à direita. $U$ conecta os indivívuos com possíveis agrupamentos das variáveis (conceitos), $V$ carrega a relação das variáveis com esses conceitos, e $\Sigma$ contém o grau da 'força' desses conceitos. Analizando os valores singulares é possível reduzir o posto de $U$, tendo em vista que valores singulares pequenos podem ser descartados. 
+O software utilizado para implementar a decomposição foi o R. A função svd() presente por _default_ retornou a três matrizes da decomposição. A biblioteca _ggplot2_ foi a escolhida para a construção das visualizações e _matrixcalc_ para o cálculo da norma de Frobenius.  
+  
+  
+Feita a decomposição por valores singulares,nota-se que com dois valores singulares já é possível aproximar muito bem a matriz com os dados originais. Abaixo o gráfico com os valores singulares normalizados.  
+  
+  
+```{r echo = FALSE , }
+#matrixes
+sing_var <- my_sdv$d
+U <- my_sdv$u
+V <- my_sdv$v
+Sigma2 <- matrix(c(sing_var[1],0,0,sing_var[2]),2,2,byrow=T)
+
+#plot
+sing_var_norm <- (sing_var - mean(sing_var))/sd(sing_var)
+dfd <- data_frame(x=1:length(sing_var_norm), y=sing_var_norm)
+ ggplot(dfd, aes(x,y)) +
+  geom_point(col='royalblue4') +
+  geom_line(col='royalblue4') + 
+  labs(title='Valores Singulares',xlab=NULL, y='Valores singulares normalizados') +
+  scale_x_discrete(limits = c(1,2, 3, 4, 5, 6, 7,8,9)) +
+  theme_bw() +
+  theme(axis.title.x=element_blank())
+```
+  
+    
+A aproximação se dá multiplicando as matrizes $U\Sigma V^t$, mas $\Sigma$ sendo a matriz com os dois maiores valores singulares encontrados, $U$ os dois primeiros postos da matriz $U$ original e $V^t$ as duas primeiras linhas da matriz $V^t$. Abaixo as cinco primeiras observações matriz aproximada:
+
+
+```{r echo=FALSE}
+u <- cbind(U[,1],U[,2])
+v <- rbind(V[,1],V[,2])
+matrix_aprox <- u %*% Sigma2 %*% v
+matrix_aprox %>% round(3) %>% head() %>% print()
+
+```
+
+A norma de Frobenius da matriz original é 205483.3 e a da aproximada é 205483.2, o que indica que ambas são bem similares, e que os dois valores singulares conseguem explicar muito bem os dados.
+
+
+Plotando $U$ temos:  
+
+```{r echo=F}
+dfu <- data_frame(x = U[,1], y=U[,2], tecido = my_data$Class)
+dfu <- filter(dfu, x!=min(x))
+
+dfu %>%
+  ggplot(aes(x,y, col=tecido)) +
+  geom_jitter(alpha=0.5) +
+  theme_bw() +
+  theme(axis.title = element_blank())
+```
+    
+      
+
+# Conclusão
+No caso analisado nesse trabalho, a decomposição agiu muito bem, tendo em vista a boa diferenciação dos grupos, com a aproximação da matriz original com apenas dois postos na matriz $U$. A norma de Frobenius da matriz original e aproximada diferem em uma casa decimal, resultados gerais bastante satisfatórios.
