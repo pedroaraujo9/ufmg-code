@@ -1,2 +1,2 @@
 # ufmg-code
-Alguns códigos de exercícios de matérias que demandam progrmação.
+Alguns códigos de exercícios de matérias que demandam programação.
