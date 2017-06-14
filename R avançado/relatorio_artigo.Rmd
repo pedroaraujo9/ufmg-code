@@ -1,0 +1,28 @@
+---
+title: "Resumo extentido do artigo 'Interactive Dendrograms: The R Packages idendro and idendr0'"
+author: "Pedro de Araújo, Gustavo Goulard, Mateus Duarte, Igor Gabriel"
+date: "7 de junho de 2017"
+output: pdf_document
+documentclass: article
+fontsize: 12pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<p>Para interagir com o pacote **cranvas** o idendro faz uso de uma estrutura de dados denominada _'mutaframe'_, que deriva de _'mutate dataframe'_ (dataframe mutável), disponível no pacote **plumbr**.</p>  
+<p>Essa estrutura de dados permite gerar dataframes com colunas especiais que contém metadados escondidos, que podem ser completamente manipulado pelo usuário. O cranvas faz uso dessa característica para  gerar metadados que irão mudar dinamicamente a cor, tamanho e visibilidade das observações no gráfico a ser gerado. O mutaframe pode ser produzido através da função _qdata_ do pacote cranvas ou pelo próprio idendro, que automaticamente gera um mutate com a função _idendro_.</p>
+<p>Por _default_ o cranvas já constrói os _mutaframes_ _.color_, _.border_, _.size_ e _.visible_ para gerenciar as características já citadas, e o idendro produz mais dois _mutaframes_: _.cluster_ e _.inCurrentCluster_, que serão responsáveis por identificar os clusters e mapear alterações no agrupamento. Esses mutaframes podem ser acessados pelo usuário para colher certas informações dos clusters que são gerados pela interface gráfica. Um caso simples seria checar algumas estatísticas (média, desvio padrão) dos clusters determinados na interface, bastando salvar a invocação, usar a função add_listener do pacote plumbr e acesar os objetos contidos na variável com a invocação do idendro.</p>
+<p>
+<p>O artigo apresenta dois estudos de caso. O primeira fala acerca da análise exploratório de dados  obtidos através de citometria de fluxo, que lida com a medida de diversos parâmetros obtidos de amostras com tamanhos exorbitantes (passando da casa dos milhões) de células.</p> 
+<p>Lidar com esse tipo de dados é um desafio, pois o pesquisador precisa interpretar os dados como um todo, e o uso da técnica da análise hierárquica de clusters é uma alternativa metodológica para esse experimento.</p>  
+<p>Com o idendro, a análise hierárquica de clusters é enriquecida com a interatividade que o pacote oferece, conjuntamente com a produção dos gráficos. O mapa de calor que é gerado com o dendograma possibilita o pesquisador identificar onde cada observação se encontra ao longo das variáveis presentes no banco de dados, além do gráfico de dispersão, que como já dito, colore cada observação de acordo com o agrupamento, facilitando ainda mais a apontar grupos. E como os dados citométricos apresentam muitas observações, a opção de dar zoom e girar o dendograma é outro diferencial do pacote, tendo em vista que essa opção ajuda na seleção dos clusters pelo usuário. No artigo é possível encontrar um exemplo completo, onde o dendograma e um gráfico de dispersão é gerado com dados do pacote flowStats.<p/>  
+<p>O segundo estudo de caso explora a maneira como o idendro interage com dados espectroscópios (dados obtidos através obtidos através da interação da matéria com a energia radiante) que são armazenados em objetos do tipo 'hyperSpec', gerados pelo pacote **hyperSpec**.</p>
+<p>De início, um certo tratamento específico para esse tipo de dados é aplicado (o banco em questão está presente no pacote hyperSpec), visando deixar os espectros similares, com a finalidade de encontrar clusters significativos. Em seguido é calculado a distância euclidiana e o método de fusão de clusters de Ward.<p/> 
+<p>O idendro entra em ação não só concebendo os gráficos no qual é designado, como o dendograma e os _plots_ auxiliares através da intergração com o cranvas, mas também interagindo com os métodos do pacote hyperSpec, que geram gráficos bastante sofisticados, mas ainda assim não interativos, o idendro os deixará interativos, sendo tudo isso possível com a criação de um mutaframe especial para lidar com os dados do tipo hyperSpec e uma função de callback, que está no artigo.</p>  
+<p>
+<p>No apêndice do artigo é possível encontrar uma breve introdução ao pacote **idendro0**, uma versão do idendro disponível no CRAN, uma alternativa para os usuários de _Windows_, tendo em vista a elevada complexidade de instalação do idendro nesse sistema operacional. O idendr0 é feito com a biblioteca nativa do R para a criação de interfaces gráficas, o tcl/tk, que é mais limitado que Qt, o que resulta em um pacote com recursos mais limitados, mas ainda assim úteis. Ainda é possível gerar o dendograma interativo com o mapa de calor, e um diagrama de dispersão com os recursos do R (apresenta problemas com o RStudio). Um recurso adicional é a integração com o GGobi, biblioteca gráfica feita para lidar com dados multivariados e que também gera gráficos interativos, bastando alterar o argumento ggobi para TRUE, há uma demo no pacote chamada 'idendroWithGgobi' com um exemplo, tal comando irá gerar um conjunto de gráficos de dispersão com todas as projeções possíveis entre as  variáveis.
+ 
+
+
