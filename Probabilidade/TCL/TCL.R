@@ -10,7 +10,7 @@ ui <- fluidPage(
         #barra 1
         sliderInput('quantidade_amostras', 'Número de amostras da média amostral:',
                     min = 1, max = 1000, value = 100),
-        #barra2
+        #barra 2
         sliderInput("tamanho_amostra",
                      "Tamanho das amostras das observações:",
                      min = 1,
@@ -26,7 +26,7 @@ ui <- fluidPage(
                                 'Binomial' = 'rbinom',
                                 'Binomial negativa' = 'rnbinom',
                                 'Poisson' = 'rpois')),
-        #arugmentos
+        #argumentos
         uiOutput('argumento_ui_1'),
         uiOutput('argumento_ui_2'),
         uiOutput('argumento_ui_3'),
@@ -34,7 +34,6 @@ ui <- fluidPage(
         textOutput('p_valor')
       ),
       
-      # Show a plot of the generated distribution
       mainPanel(
         #painel com os gráficos
         tabsetPanel(
@@ -46,12 +45,11 @@ ui <- fluidPage(
       )
    )
 )
-
-# Define server logic required to draw a histogram
+#server
 server <- function(input, output) {
   #gerando o primeiro input do argumento
   output$argumento_ui_1 <- renderUI({
-    #transformando a string da barra com as distribuiçõs em uma função
+    #transformando a string da barra de seleção com as distribuiçõs em uma função
     funcao <- eval(parse(text=input$distribuicao))
     #criando o input com o argumento
     numericInput('argumento_1', label=formalArgs(funcao)[2], value=1, min=0)
@@ -76,7 +74,7 @@ server <- function(input, output) {
     x_barra <- vector()
     amostra = numeric()
     
-    #caso com um dois arugmentos
+    #caso com um dois argumentos
     if(input$distribuicao %in% c('rgamma', 'rweibull', 'rnbinom', 'rbinom')){
       for(i in 1:input$quantidade_amostras){
         amostra = funcao(input$tamanho_amostra, input$argumento_1,
