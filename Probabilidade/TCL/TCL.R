@@ -74,7 +74,7 @@ server <- function(input, output) {
     x_barra <- vector()
     amostra = numeric()
     
-    #caso com um dois argumentos
+    #caso com dois argumentos
     if(input$distribuicao %in% c('rgamma', 'rweibull', 'rnbinom', 'rbinom')){
       for(i in 1:input$quantidade_amostras){
         amostra = funcao(input$tamanho_amostra, input$argumento_1,
