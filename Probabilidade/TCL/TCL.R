@@ -1,7 +1,8 @@
 library(shiny)
 library(dplyr)
+library(shinythemes)
 
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme('flatly'),
    
    titlePanel("Teorema central do limite"),
    
