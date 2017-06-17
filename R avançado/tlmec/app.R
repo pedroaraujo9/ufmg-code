@@ -28,12 +28,14 @@ ui <- fluidPage(theme=shinytheme('united'),
       uiOutput('resposta_ui'),
       uiOutput('censura_ui'),
       uiOutput('explicativas_ui'),
-      actionButton('do', 'Ajustar')
+      actionButton('do', 'Ajustar'),
+      shinysky::busyIndicator()
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
-      verbatimTextOutput('texto')
+      verbatimTextOutput('texto'),
+      verbatimTextOutput('load')
     )
   )
 )
@@ -117,8 +119,8 @@ server <- function(input, output) {
       nj[j]=sum(cluster==j)
     }
     
-    out <- tlmec(cens,y,x, z,nj, family = input$distri, criteria = input$criterio)
-    
+    out <- tlmec(censura,y,x, z,nj, 
+                 family = input$distri, criteria = input$criterio)
     output$texto <- renderPrint(out)
     
     
