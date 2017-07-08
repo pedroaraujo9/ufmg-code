@@ -13,18 +13,47 @@ knitr::opts_chunk$set(echo = TRUE)
 library(magrittr)
 
 
-chisq.test <- function(x, dist) {
+
+n_interval <- function(x, inf, sup) {
+  return(length(x[x>inf & x < sup]))
+}
+
+obs <- function(x, intervalos) {
+  observados <- length(x[x<intervalos[1]])
+  for(i in 1:(length(intervalos)-1)){
+        observados <- c(observados, n_interval(x, intervalos[i], intervalos[i+1]))
+  }
+  observados <- c(observados, length(x[x > intervalos[length(intervalos)]]))
+  observados
+  
+}
+
+chisq.test <- function(x, dist='exponencial') {
   library(magrittr)
   if(dist=='normal'){
     if(length(x) == 10){
       intervalos=0
     }else{
       p <- 5/length(x)
-      d <- c(seq(p, 0.5, by=p))
+      d <- seq(p, 0.5, by=p)
       intervalos <- c(qnorm(d, lower.tail=T), rev(-qnorm(d, lower.tail = T))) %>% unique()
+      qui <- sum(((obs(x, intervalos) - 5)^2)/5)
+      p.valor <- pchisq(qui, df=length(x)-2, lower.tail = F)
     }
+  }else if(dist == 'exponencial'){
+    p <- 5/length(x)
+    d <- seq(p, 0.5, by=p)
+    d_a <- d[-length(d)] + 0.5
+    d <- c(d, d_a)
+    intervalos <- qexp(d, rate=1)
+    qui <- sum(((obs(x, intervalos) -5)^2)/5)
+    p.value <- pchisq(qui, df=length(x)-1, lower.tail=F)
+  }else{
+    #code uniforme
   }
-  intervalos
+  resultado <- list(int = intervalos, d=d, p=p, obs = obs(x, intervalos),qui=qui,
+                    p.value=p.value)
+  return(resultado)
 }
 
 
