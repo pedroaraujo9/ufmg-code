@@ -91,7 +91,8 @@ Serão geradas 1000 amostras aleatórias com distribuição $Normal(0,1)$, $exp(
 O teste qui-quadrado é bastante utilizado para testar a independência entre variáveis categóricas, mas pode ser adaptado para testar a aderência de amostra aleatória em relação a uma distribuição. O teste tenta captar a diferença entre valor observado e o valor esperado em intervalos *****. Uma restrição para o teste é que os valores esperados $e_{i,j}$ sejam maiores ou iguais a 5.
 
 Seja $X_{1},...,X_{n}$ amostra aleatória de uma variável $X$ e $Y$ ****. As hipóetes para o teste são:
-$$ H_{0}:X\: segue\: a\: distribuição\:Y \\ H_{1}: X \: não\: segue\:a\:distribuição\: Y$$
+$$ H_{0}:X\: segue\: a\: distribuição\:Y $$
+$$H_{1}: X \: não\: segue\:a\:distribuição\: Y$$
 Com estatística de teste:
 $$\frac{(o_{i} - e_{i})^2}{e_{i}} \sim \chi^2_{n-2}$$
 Não há uma implementação exata da adaptação do teste qui-quadrado no R para a sua versão de aderência. No entanto, é possível implementa-la de forma autônoma. 
@@ -105,7 +106,8 @@ Optamos por manter a frequência observada igual a 5. Logo, iremos buscar por in
 <p>
 O teste de Kolomogorov-Smirnov () é um teste que tem por finalidade comparar se duas amostras   aleatórias seguem a mesma distribuição de probabilidade. Ele é formulado através da função de   distribuição acumulada empírica, analisando a distância estre as duas funções. Uma das   aplicações do teste é como teste de aderência.   
 Sejam $X_{1}, ...,X_{n}$ amostra aleatória com função distribuição acumulada $F$ e   $Y_{1},...Y_{m}$ amostra aleatória com função distribuição acumulada $G$. As hipóteses   utilizadas para a construção são: 
-$$H_{0}:F=G\\H_{1}: F \neq G $$
+$$H_{0}:F=G$$
+$$H_{1}: F \neq G $$
 E a estatística de teste é:
 $$D_{n,m} = max\{\mid F_{n}(x) - G_{m}(y)\mid\} $$
 No R o teste pode ser feito usando a função __ks.test__. Um exemplo simples, onde queremos testar se a amostra segue uma distribuição $Normal(40, 2)$:
@@ -117,10 +119,10 @@ No teste acima a estatística $D_{400}$ obteve valor 0.047, e o p-valor 0.3234, 
 #Teste Cramér-von Mises
 O teste de Cramér-von Mises ou cretério de Cramér-von Mises é uma alternativa ao teste de Kolmogorov-Smirnov. O teste também compara a igualdade de distribuições de probabilidae usando a função de distribuição empírica.
 Para a versão de teste de aderência (também é possível comparar amostras) segue-se que:
-Seja $X_{1}, ...,X_{n}$ amostra aleatória em ordem crescente com função de distribuição empírica $F_{n}$, a estatística do teste será: 
+Seja $x_{1}, ...,x_{n}$ amostra aleatória em ordem crescente com função de distribuição empírica $F_{n}$, a estatística do teste será: 
 $$ T=n\omega^2=\frac{1}{12n} + \sum_{i=1}^{n}\bigg[\frac{2i-1}{2n} -F(x_{i})\bigg]^2$$
 Sendo $\omega^2$ igual a:
-$$\int_{-\infty}^{\infty} [F_{n}(x)-F^*(x)]^2dF^*(x)$$
+$$\int_{-\infty}^{\infty} [F_{n}(x)-F^*(x)]^2dF^*(x)$$, aonde $F^*$ é a função de distribuição teórica. 
 O p-valor pode é computado usando uma distribuição exata para essa estatística. 
 Exemplo no R usando o pacote 'goftest':
 ```{r}
