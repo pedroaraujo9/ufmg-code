@@ -1,0 +1,111 @@
+---
+title: "Testes de Aderência"
+author: "Pedro Menezes de Araújo, Pedro Pires Costa"
+date: "13 de julho de 2017"
+output: pdf_document
+number_sections: true
+fontsize: 12pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(magrittr)
+
+
+chisq.test <- function(x, dist) {
+  library(magrittr)
+  if(dist=='normal'){
+    if(length(x) == 10){
+      intervalos=0
+    }else{
+      p <- 5/length(x)
+      d <- c(seq(p, 0.5, by=p))
+      intervalos <- c(qnorm(d, lower.tail=T), rev(-qnorm(d, lower.tail = T))) %>% unique()
+    }
+  }
+  intervalos
+}
+
+
+comp <- function(distribuicao, teste){
+  cumulativa <- c('rnorm' = 'pnorm', 'rexp' = 'pexp', 'runif' = 'punif')
+  rdistri <- eval(parse(text=distribuicao))
+  teste <- eval(parse(text=teste))
+  n_erros <- vector()
+  #set.seed(2)
+  for(j in c(10, 100, 500, 1000, 4000, 10000)){
+    p.valores <- vector()
+    for(i in 1:1000){
+      teste_result <- rdistri(j) %>% teste(cumulativa[distribuicao])
+      p.valores <- c(p.valores, teste_result$p.value)
+    }
+    erros <- p.valores[p.valores<0.1] %>% length()
+    n_erros <- c(n_erros, erros)
+  }
+  n_erros
+}
+
+```
+
+#Introdução
+<p>
+Os testes de aderência (ou bondade de ajuste) são muito utilizados na rotina estatítica clássica. Eles servem para testar se uma determinada amostra aleatória é gerada por uma distribuição específica. São muito úteis, pois em boa parte dos casos não se sabe a distribuição de probabilidade da população no qual a amostra é proveniente. Tal informação é necessária, por exemplo, para decidir quais testes de hipóteses podem ser usados em análises posteriores.  
+O presente trabalho tem por objetivo apresentar e comparar os teste de aderência Qui-quadrado, Kolomogorov-Smirnov e o teste de Cramér-von Mises através de simulações no ambiente R.
+<p/>
+<p>
+Serão geradas 1000 amostras aleatórias com distribuição $Normal(0,1)$, $exp(1)$ e $U[0,1]$ de tamanhos, 10, 100, 1000, 10000, sendo aplicadas em cada teste com nível de significância $\alpha=0.1$, tendo em vista que nesse tipo deste $H_{0}$ é a hipótese do interesse (seguir a distribuição pré-especificada pelo pesquisador), com finalidade de comparar a taxa de acerto de cada teste.
+</p>
+
+#Teste Qui-quadrado
+<p>
+O teste qui-quadrado é bastante utilizado para testar a independência entre variáveis categóricas, mas pode ser adaptado para testar a aderência de amostra aleatória em relação a uma distribuição. O teste tenta captar a diferença entre valor observado e o valor esperado em intervalos *****. Uma restrição para o teste é que os valores esperados $e_{i,j}$ sejam maiores ou iguais a 5.
+
+Seja $X_{1},...,X_{n}$ amostra aleatória de uma variável $X$ e $Y$ ****. As hipóetes para o teste são:
+$$ H_{0}:X\: segue\: a\: distribuição\:Y \\ H_{1}: X \: não\: segue\:a\:distribuição\: Y$$
+Com estatística de teste:
+$$\frac{(o_{i} - e_{i})^2}{e_{i}} \sim \chi^2_{n-2}$$
+Não há uma implementação exata da adaptação do teste qui-quadrado no R para a sua versão de aderência. No entanto, é possível implementa-la de forma autônoma. 
+Para o caso contínuo, visando respeitar a condição da frequência esperada ser maior ou igual a 5, tempos:
+$$e_{i}=p\:\cdotp n\Rightarrow p\:\cdot n \geq5\Rightarrow p\geq \frac{5}{n}$$
+Optamos por manter a frequência observada igual a 5. Logo, iremos buscar por intervalos na   função densidade que compreendam o valor de probabilidade $$p=\frac{5}{n}$$  
+
+</p>
+
+#Teste Kolmogorov-Smirnov
+<p>
+O teste de Kolomogorov-Smirnov () é um teste que tem por finalidade comparar se duas amostras   aleatórias seguem a mesma distribuição de probabilidade. Ele é formulado através da função de   distribuição acumulada empírica, analisando a distância estre as duas funções. Uma das   aplicações do teste é como teste de aderência.   
+Sejam $X_{1}, ...,X_{n}$ amostra aleatória com função distribuição acumulada $F$ e   $Y_{1},...Y_{m}$ amostra aleatória com função distribuição acumulada $G$. As hipóteses   utilizadas para a construção são: 
+$$H_{0}:F=G\\H_{1}: F \neq G $$
+E a estatística de teste é:
+$$D_{n,m} = max\{\mid F_{n}(x) - G_{m}(y)\mid\} $$
+No R o teste pode ser feito usando a função __ks.test__. Um exemplo simples, onde queremos testar se a amostra segue uma distribuição $Normal(40, 2)$:
+```{r echo=T, eval=T}
+ks.test(rnorm(400, mean=40, sd=2), 'pnorm', 40, 2)
+```
+No teste acima a estatística $D_{400}$ obteve valor 0.047, e o p-valor 0.3234, logo, como o esperado, não rejeita-se a hipótese de normalidade. 
+</p>
+#Teste Cramér-von Mises
+O teste de Cramér-von Mises ou cretério de Cramér-von Mises é uma alternativa ao teste de Kolmogorov-Smirnov. O teste também compara a igualdade de distribuições de probabilidae usando a função de distribuição empírica.
+Para a versão de teste de aderência (também é possível comparar amostras) segue-se que:
+Seja $X_{1}, ...,X_{n}$ amostra aleatória em ordem crescente com função de distribuição empírica $F_{n}$, a estatística do teste será: 
+$$ T=n\omega^2=\frac{1}{12n} + \sum_{i=1}^{n}\bigg[\frac{2i-1}{2n} -F(x_{i})\bigg]^2$$
+Sendo $\omega^2$ igual a:
+$$\int_{-\infty}^{\infty} [F_{n}(x)-F^*(x)]^2dF^*(x)$$
+O p-valor pode é computado usando uma distribuição exata para essa estatística. 
+Exemplo no R usando o pacote 'goftest':
+```{r}
+library(goftest)
+cvm.test(rnorm(400), 'pnorm')
+```
+O teste retorna o valor de $\omega^2$ e o p-valor.
+
+#Comparação entre os testes
+
+#Conclusão
+
+
+
+
+
+

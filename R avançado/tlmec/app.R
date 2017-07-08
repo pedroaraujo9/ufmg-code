@@ -5,7 +5,7 @@ library(DT)
 library(tlmec)
 library(shinythemes)
 
-# Define UI for application that draws a histogram
+# Define UI 
 ui <- fluidPage(theme=shinytheme('united'),
   
   # Application title
@@ -120,7 +120,7 @@ server <- function(input, output) {
     }
     
     out <- tlmec(censura,y,x, z,nj, 
-                 family = input$distri, criteria = input$criterio)
+                 family = input$distri, criteria = as.logical(input$criterio))
     output$texto <- renderPrint(out)
     
     
