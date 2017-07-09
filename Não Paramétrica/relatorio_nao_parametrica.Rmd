@@ -10,9 +10,13 @@ fontsize: 12pt
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(magrittr)
 
+```
 
+```{r echo=F, warning=F}
+library(magrittr, warn.conflicts=F)
+library(dplyr,warn.conflicts=F)
+library(stringr,warn.conflicts = F)
 
 n_interval <- function(x, inf, sup) {
   return(length(x[x>inf & x < sup]))
@@ -28,9 +32,9 @@ obs <- function(x, intervalos) {
   
 }
 
-chisq.test <- function(x, dist='exponencial') {
-  library(magrittr)
-  if(dist=='normal'){
+chisq.test <- function(x, dist='pnorm') {
+  library(magrittr,warn.conflicts = F)
+  if(dist=='pnorm'){
     if(length(x) == 10){
       intervalos=0
     }else{
@@ -38,9 +42,9 @@ chisq.test <- function(x, dist='exponencial') {
       d <- seq(p, 0.5, by=p)
       intervalos <- c(qnorm(d, lower.tail=T), rev(-qnorm(d, lower.tail = T))) %>% unique()
       qui <- sum(((obs(x, intervalos) - 5)^2)/5)
-      p.valor <- pchisq(qui, df=length(x)-2, lower.tail = F)
+      p.value <- pchisq(qui, df=length(x)-2, lower.tail = F)
     }
-  }else if(dist == 'exponencial'){
+  }else if(dist == 'pexp'){
     p <- 5/length(x)
     d <- seq(p, 0.5, by=p)
     d_a <- d[-length(d)] + 0.5
@@ -48,33 +52,131 @@ chisq.test <- function(x, dist='exponencial') {
     intervalos <- qexp(d, rate=1)
     qui <- sum(((obs(x, intervalos) -5)^2)/5)
     p.value <- pchisq(qui, df=length(x)-1, lower.tail=F)
-  }else{
+  }else if(dist=='punif'){
     #code uniforme
+    p <- 5/length(x)
+    d <- seq(p, 0.5, by=p)
+    d_a <- d[-length(d)] + 0.5
+    d <- c(d, d_a)
+    intervalos <- qunif(d, 0, 1)
+    qui <- sum(((obs(x, intervalos) -5)^2)/5)
+    p.value <- pchisq(qui, df=length(x)-1, lower.tail=F)
   }
   resultado <- list(int = intervalos, d=d, p=p, obs = obs(x, intervalos),qui=qui,
                     p.value=p.value)
   return(resultado)
 }
 
+##normal
+library(goftest)
 
-comp <- function(distribuicao, teste){
-  cumulativa <- c('rnorm' = 'pnorm', 'rexp' = 'pexp', 'runif' = 'punif')
-  rdistri <- eval(parse(text=distribuicao))
-  teste <- eval(parse(text=teste))
-  n_erros <- vector()
-  #set.seed(2)
-  for(j in c(10, 100, 500, 1000, 4000, 10000)){
-    p.valores <- vector()
-    for(i in 1:1000){
-      teste_result <- rdistri(j) %>% teste(cumulativa[distribuicao])
-      p.valores <- c(p.valores, teste_result$p.value)
+comp <- function(r, p) {
+  set.seed(1000)
+  resultado <- list()
+  testes <- c('chisq'= chisq.test, 'ks' = ks.test, 'cvm' = cvm.test)
+  for(i in 1:3){
+    n_n <- vector()
+    for(n in c(20, 100, 500, 1000, 5000)){
+      p.valor <- vector()
+      for(experimento in 1:100){
+        amostra <- eval(parse(text=r))(n)
+        p.valor <- c(p.valor, testes[[i]](amostra, p)$p.value)
+      }
+      acertos <- length(p.valor[p.valor > 0.1])
+      n_n <- c(n_n, acertos)
     }
-    erros <- p.valores[p.valores<0.1] %>% length()
-    n_erros <- c(n_erros, erros)
+    resultado[[names(testes[i])]] <- n_n
   }
-  n_erros
+  resultado
+    
+}
+library(purrr,warn.conflicts = F)
+library(tidyr,warn.conflicts = F)
+library(ggplot2,warn.conflicts = F)
+tidy <- function(df) {
+    df_f <- gather(df %>% as.data.frame(), var, value, -n) %>% 
+    unite('gp',var,n,remove=F) %>%
+    separate(var,c('distri', 'teste')) %>% rename(acerto = value) %>%
+    mutate(erro = 100 - acerto)
+    df_f$n <- as.factor(df_f$n)
+    return(df_f)
 }
 
+pp <- function(df, distribuicao, mode, titulo){
+  mycol <- c('royalblue4', 'royalblue3', 'slategray2')
+    pl <- df %>% filter(str_detect(distri, distribuicao)) %>%
+    ggplot(aes_string('n',mode)) +
+    geom_bar(stat='identity', position=position_dodge(), aes(fill=teste)) +
+      scale_x_discrete(labels=rep(c(20, 100, 500, 1000, 5000),3)) +
+      labs(x='Tamanho da amostra', y='Frequência de acertos', title=titulo) +
+      scale_fill_manual(values=mycol) +
+      theme_bw()
+    return(pl)
+}
+##normal
+normal <- map2(list('rnorm', 'rexp', 'runif'), list('pnorm'), comp)
+names(normal) <- c('norm', 'exp', 'runif')
+normal$n <- c(20, 100, 500, 1000, 5000)
+
+p_n <- normal %>% tidy() %>% pp('norm','acerto', 'Ajuste normal com amostra normal')
+p_n_e <- normal %>% tidy() %>% pp('exp', 'erro', 'Ajuste normal com amostra exponencial')
+p_n_u <- normal %>% tidy() %>% pp('runif', 'erro', 'Ajuste normal com amostra uniforme')
+
+#exponencial
+exponencial <- map2(list('rnorm', 'rexp', 'runif'), list('pexp'), comp)
+names(exponencial) <- c('norm', 'exp', 'runif')
+exponencial$n <- c(20, 100, 500, 1000, 5000)
+
+p_e <- exponencial %>% tidy %>% pp('exp','acerto', 'Ajuste exponencial com amostra exponencial')
+p_e_n <- exponencial %>% tidy %>% pp('norm','erro' ,"Ajuste exponencial com amostra normal")
+p_e_u <- exponencial %>% tidy %>% pp('runif','erro' ,'Ajuste exponencial com amostra uniforme')
+
+#uniforme
+uniforme <- map2(list('rnorm', 'rexp', 'runif'), list('punif'), comp)
+names(uniforme) <- c('norm', 'exp', 'runif')
+uniforme$n <- c(20, 100, 500, 1000, 5000)
+
+p_u <- uniforme %>% tidy %>% pp('runif','acerto', 'Ajuste uniforme com amostra uniforme')
+p_u_n <- uniforme %>% tidy %>% pp('norm','erro', 'Ajuste uniforme com amostra normal')
+p_u_e <- uniforme %>% tidy %>% pp('exp','erro', 'Ajuste uniforme com amostra exponencial')
+
+
+##multiplot
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid,warn.conflicts = F)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
 ```
 
 #Introdução
@@ -94,7 +196,7 @@ Seja $X_{1},...,X_{n}$ amostra aleatória de uma variável $X$ e $Y$ ****. As hi
 $$ H_{0}:X\: segue\: a\: distribuição\:Y $$
 $$H_{1}: X \: não\: segue\:a\:distribuição\: Y$$
 Com estatística de teste:
-$$\frac{(o_{i} - e_{i})^2}{e_{i}} \sim \chi^2_{n-2}$$
+$$\frac{(o_{i} - e_{i})^2}{e_{i}} \sim \chi^2_{n-1}$$
 Não há uma implementação exata da adaptação do teste qui-quadrado no R para a sua versão de aderência. No entanto, é possível implementa-la de forma autônoma. 
 Para o caso contínuo, visando respeitar a condição da frequência esperada ser maior ou igual a 5, tempos:
 $$e_{i}=p\:\cdotp n\Rightarrow p\:\cdot n \geq5\Rightarrow p\geq \frac{5}{n}$$
@@ -132,6 +234,17 @@ cvm.test(rnorm(400), 'pnorm')
 O teste retorna o valor de $\omega^2$ e o p-valor.
 
 #Comparação entre os testes
+
+```{r echo=F, fig.height=9}
+multiplot(p_n, p_u, p_e)
+```
+```{r echo=F, fig.height=9}
+multiplot(p_n_e, p_n_u, p_e_u)
+```
+```{r echo=F, fig.height=9}
+multiplot(p_e_n, p_u_e, p_u_n)
+```
+
 
 #Conclusão
 
