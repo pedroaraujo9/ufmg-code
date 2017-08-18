@@ -1,0 +1,1584 @@
+<!doctype html>
+<html ng-app>
+<head>
+  <title>Primeira parte</title>
+  <meta charset="utf-8" />
+  <script src='js/jquery-3.1.1.min.js' type='text/javascript' /></script>
+  <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+  <script src='js/back.js' type='text/javascript'></script>
+  <script src="js/angular.min.js" type='text/javascript'></script>
+  <script src='js/lightbox.js' type='text/javascript'></script>
+  <script src='js/jquery.mask.js' type='text/javascript'></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/lightbox.css">
+
+</head>
+
+<body>
+  <center>
+    <span id='div_do_id' style='display:none;'></span>
+    <span id='palavra1' style='display:none;'></span>
+    <span id='palavra2' style='display:none;'></span>
+    <span id='palavra3' style='display:none;'></span>
+    <span id='palavra4' style='display:none;'></span>
+    <span id='palavra5' style='display:none;'></span>
+  </center>
+<a href="imagens/mac.jpg" data-lightbox="image-1"> <button class='ajuda'>Ajuda</button></a>
+<a href='imagens/mac2.jpg' data-lightbox='image-1'></a>
+
+  <center>
+    <div class='parte1'>
+      <h1 class= 'text-header'>Representações Sociais</h1>
+    </div>
+    <div  class='principal'>
+      <form id='quadro1'>
+        <table class=table1>
+          <tr>
+            <td class='l1'>
+              <label >Data: </label>
+            </td>
+            <td>
+              <input required='required' type='text' id='data' name='data' class='palavras'/>
+            </td>
+          </tr>
+          <tr>
+            <td class='l1'>
+              <label>Informante: </label>
+            </td>
+            <td>
+              <input required='required' type='text' id='nome_informante' name='nome_informante' class='palavras' />
+            </td>
+          </tr>
+          <tr>
+            <td class='l1'>
+              <label>Hora início: </label>
+            </td>
+            <td>
+              <input required='required' type='text' id='hora_inicio' name='hora_inicio' class='palavras' />
+            </td>
+          </tr>
+          <tr class="separator" />
+        </table>
+        <div>
+          Agora, você deverá escrever cinco palavras ou expressões que vêm
+          imediatamente à sua cabeça em relação à expressão abaixo:<br>
+          <h1>BARRAGEM DO FUNDÃO</h1>
+
+        </div>
+        <table>
+          <tr>
+            <td class='l1'>
+              <label>Palavra 1:</label>
+            </td>
+            <td>
+              <input required='required' ng-model='ng_p1' type='text' id='p1' name='p1' class='palavras'/>
+            </td>
+          </tr>
+          <tr>
+            <td class='l1'>
+              <label>Palavra 2:</label>
+            </td>
+            <td>
+              <input required='required' type='text' ng-model='np_p2' id='p2' name='p2' class='palavras'/>
+            </td>
+          </tr>
+          <tr>
+            <td class='l1'>
+              <label>Palavra 3:</label>
+            </td>
+            <td>
+              <input required='required' type='text' ng-model='np_p3' id='p3' name='p3' class='palavras'/>
+            </td>
+          </tr>
+          <tr class="separator" />
+          <tr class="separator" />
+        </table>
+        <div>
+          <h3>Ordem de Importância: Classifique as evocações por ordem de importância:<br><br>
+           1 - Mais Importante, <br><br>
+           3 - Menos importante.</h3>
+        </div>
+        <br>
+        <table>
+
+          <tr>
+            <td>
+              <label>Importância da palavra <b>{{ng_p1}}</b></label>
+            </td>
+            <td>
+              <input required='required' type='numeric' id='imp1' class='imp_palavras'/>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <label>Importância da palavra <b>{{np_p2}}</b></label>
+            </td>
+            <td>
+              <input required='required' type='numeric' id='imp2' class='imp_palavras'/>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <label>Importância da palavra <b>{{np_p3}}</b></label>
+            </td>
+            <td>
+              <input required='required' type='numeric' id='imp3' class='imp_palavras'/>
+            </td>
+          </tr>
+
+          <tr class="separator" />
+          <tr class="separator" />
+        </table>
+        <div>
+          <h3>Agora, você deverá indicar o significado que cada uma das palavras acima tem para você:</h3>
+        </div>
+        <br>
+        <table>
+          <tr>
+            <td class='l1'>
+              <label required='required' id='label_sig1'>Significado da palavra: </label>
+            </td>
+            <td>
+              <input required='required' type='text' id='sig_p1' name='sig_p1' class='palavras'/>
+            </td>
+          </tr>
+          <tr>
+            <td class='l1'>
+              <label id='label_sig2'>Significado a palavra: </label>
+            </td>
+            <td>
+              <input type='text'  id='sig_p2' name='sig_p2' class='palavras'/>
+            </td>
+          </tr>
+          <tr>
+            <td class='l1'>
+              <label id='label_sig3'>Significado da palavra: </label>
+            </td>
+            <td>
+              <input required='required' type='text' id='sig_p3' name='sig_p3' class='palavras'/>
+            </td>
+          </tr>
+
+
+        </table>
+        <br />
+        <br />
+        <input type='submit' class='proximo' value='Continuar'/>
+      </form>
+
+
+
+
+
+
+      <div class='form2' style='display:none;'>
+
+        <form id='quadro2' class='quadro2class'>
+
+          <h2 id='exp1'> </h2>
+          <table>
+          <tr class="separator" />
+
+            <tr class='l2'>
+              <td id='p1f_1'>
+                Pergunta 1:
+              </td>
+              <td>
+                Sim<input type='radio' value= '1' class='radio2' name='el_ev1a' />
+              </td>
+              <td>
+                Não<input type='radio' value = '0' class='radio2' name='el_ev1a' />
+              </td>
+              <td>
+                Não sei<input type='radio' value = '2' class='radio2' name='el_ev1a' />
+              </td>
+
+            </tr>
+
+            <tr class="separator" />
+
+              <tr class='l2'>
+                <td id='p2f_1'>
+                  Pergunta 2:
+                </td>
+                <td>
+                  Sim<input type='radio' value= '1' class='radio2' name='el_ev1b' />
+                </td>
+                <td>
+                  Não<input type='radio' value = '0' class='radio2' name='el_ev1b' />
+                </td>
+                <td>
+                  Não sei<input type='radio' value = '2' class='radio2' name='el_ev1b' />
+                </td>
+
+              </tr>
+
+              <tr class="separator" />
+
+                <tr class='l2'>
+                  <td id='p3f_1'>
+                    Pergunta 3:
+                  </td>
+                  <td>
+                    Sim<input type='radio' value= '1' class='radio2' name='el_ev1c' />
+                  </td>
+                  <td>
+                    Não<input type='radio' value = '0' class='radio2' name='el_ev1c' />
+                  </td>
+                  <td>
+                    Não sei<input type='radio' value = '2' class='radio2' name='el_ev1c' />
+                  </td>
+
+                </tr>
+
+          </table>
+          <br /><br />
+
+
+
+
+          <h2 id='exp2'> </h2>
+          <table>
+          <tr class="separator" />
+
+            <tr class='l2'>
+              <td id='p1f_2'>
+                Pergunta 1:
+              </td>
+              <td>
+                Sim<input type='radio' value= '1' class='radio2' name='el_ev2a' />
+              </td>
+              <td>
+                Não<input type='radio' value = '0' class='radio2' name='el_ev2a' />
+              </td>
+              <td>
+                Não sei<input type='radio' value = '2' class='radio2' name='el_ev2a' />
+              </td>
+
+            </tr>
+
+            <tr class="separator" />
+
+              <tr class='l2'>
+                <td id='p2f_2'>
+                  Pergunta 2:
+                </td>
+                <td>
+                  Sim<input type='radio' value= '1' class='radio2' name='el_ev2b' />
+                </td>
+                <td>
+                  Não<input type='radio' value = '0' class='radio2' name='el_ev2b' />
+                </td>
+                <td>
+                  Não sei<input type='radio' value = '2' class='radio2' name='el_ev2b' />
+                </td>
+
+              </tr>
+
+              <tr class="separator" />
+
+                <tr class='l2'>
+                  <td id='p3f_2'>
+                    Pergunta 3:
+                  </td>
+                  <td>
+                    Sim<input type='radio' value= '1' class='radio2' name='el_ev2c' />
+                  </td>
+                  <td>
+                    Não<input type='radio' value = '0' class='radio2' name='el_ev2c' />
+                  </td>
+                  <td>
+                    Não sei<input type='radio' value = '2' class='radio2' name='el_ev2c' />
+                  </td>
+
+                </tr>
+
+          </table>
+          <br /><br />
+
+
+
+
+          <h2 id='exp3'> </h2>
+          <table>
+          <tr class="separator" />
+
+            <tr class='l2'>
+              <td id='p1f_3'>
+                Pergunta 1:
+              </td>
+              <td>
+                Sim<input type='radio' value= '1' class='radio2' name='el_ev3a' />
+              </td>
+              <td>
+                Não<input type='radio' value = '0' class='radio2' name='el_ev3a' />
+              </td>
+              <td>
+                Não sei<input type='radio' value = '2' class='radio2' name='el_ev3a' />
+              </td>
+
+            </tr>
+
+            <tr class="separator" />
+
+              <tr class='l2'>
+                <td id='p2f_3'>
+                  Pergunta 2:
+                </td>
+                <td>
+                  Sim<input type='radio' value= '1' class='radio2' name='el_ev3b' />
+                </td>
+                <td>
+                  Não<input type='radio' value = '0' class='radio2' name='el_ev3b' />
+                </td>
+                <td>
+                  Não sei<input type='radio' value = '2' class='radio2' name='el_ev3b' />
+                </td>
+
+              </tr>
+
+              <tr class="separator" />
+
+                <tr class='l2'>
+                  <td id='p3f_3'>
+                    Pergunta 3:
+                  </td>
+                  <td>
+                    Sim<input type='radio' value= '1' class='radio2' name='el_ev3c' />
+                  </td>
+                  <td>
+                    Não<input type='radio' value = '0' class='radio2' name='el_ev3c' />
+                  </td>
+                  <td>
+                    Não sei<input type='radio' value = '2' class='radio2' name='el_ev3c' />
+                  </td>
+
+                </tr>
+
+          </table>
+          <br /><br />
+
+
+
+          <input id='subform2' type='submit' value='Continuar' class='proximo' />
+
+        </form>
+      </div>
+
+    </div>
+
+
+
+
+
+
+
+    <div class='form3' style='display:none;'>
+      <form id='quadro3'>
+        <h2 id='exp1_3'> </h2>
+        <table>
+        <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p1f_1_tres'>
+              Pergunta 1:
+            </td>
+
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ev_ev1a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ev_ev1a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ev_ev1a' />
+            </td>
+          </tr>
+
+          <tr class="separator" />
+
+            <tr class='l2'>
+              <td id='p2f_1_tres'>
+                Pergunta 2:
+              </td>
+              <td>
+                Sim<input type='radio' value= '1' class='radio2' name='ev_ev1b' />
+              </td>
+              <td>
+                Não<input type='radio' value = '0' class='radio2' name='ev_ev1b' />
+              </td>
+              <td>
+                Não sei<input type='radio' value = '2' class='radio2' name='ev_ev1b' />
+              </td>
+
+            </tr>
+
+            <tr class="separator" />
+
+              <tr class='l2'>
+                <td id='p3f_1_tres'>
+                  Pergunta 3:
+                </td>
+                <td>
+                  Sim<input type='radio' value= '1' class='radio2' name='ev_ev1c' />
+                </td>
+                <td>
+                  Não<input type='radio' value = '0' class='radio2' name='ev_ev1c' />
+                </td>
+                <td>
+                  Não sei<input type='radio' value = '2' class='radio2' name='ev_ev1c' />
+                </td>
+
+              </tr>
+
+        </table>
+        <br /><br />
+
+
+
+
+        <h2 id='exp2_3'> </h2>
+        <table>
+        <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p1f_2_tres'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ev_ev2a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ev_ev2a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ev_ev2a' />
+            </td>
+
+          </tr>
+
+          <tr class="separator" />
+
+            <tr class='l2'>
+              <td id='p2f_2_tres'>
+                Pergunta 2:
+              </td>
+              <td>
+                Sim<input type='radio' value= '1' class='radio2' name='ev_ev2b' />
+              </td>
+              <td>
+                Não<input type='radio' value = '0' class='radio2' name='ev_ev2b' />
+              </td>
+              <td>
+                Não sei<input type='radio' value = '2' class='radio2' name='ev_ev2b' />
+              </td>
+
+            </tr>
+
+            <tr class="separator" />
+
+              <tr class='l2'>
+                <td id='p3f_2_tres'>
+                  Pergunta 3:
+                </td>
+                <td>
+                  Sim<input type='radio' value= '1' class='radio2' name='ev_ev2c' />
+                </td>
+                <td>
+                  Não<input type='radio' value = '0' class='radio2' name='ev_ev2c' />
+                </td>
+                <td>
+                  Não sei<input type='radio' value = '2' class='radio2' name='ev_ev2c' />
+                </td>
+
+              </tr>
+
+        </table>
+        <br /><br />
+
+
+
+
+        <h2 id='exp3_3'> </h2>
+        <table>
+        <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p1f_3_tres'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ev_ev3a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ev_ev3a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ev_ev3a' />
+            </td>
+
+          </tr>
+
+          <tr class="separator" />
+
+            <tr class='l2'>
+              <td id='p2f_3_tres'>
+                Pergunta 2:
+              </td>
+              <td>
+                Sim<input type='radio' value= '1' class='radio2' name='ev_ev3b' />
+              </td>
+              <td>
+                Não<input type='radio' value = '0' class='radio2' name='ev_ev3b' />
+              </td>
+              <td>
+                Não sei<input type='radio' value = '2' class='radio2' name='ev_ev3b' />
+              </td>
+
+            </tr>
+
+            <tr class="separator" />
+
+              <tr class='l2'>
+                <td id='p3f_3_tres'>
+                  Pergunta 3:
+                </td>
+                <td>
+                  Sim<input type='radio' value= '1' class='radio2' name='ev_ev3c' />
+                </td>
+                <td>
+                  Não<input type='radio' value = '0' class='radio2' name='ev_ev3c' />
+                </td>
+                <td>
+                  Não sei<input type='radio' value = '2' class='radio2' name='ev_ev3c' />
+                </td>
+
+              </tr>
+
+        </table>
+        <br /><br />
+
+
+
+        <input id='subform3' type='submit' value='Continuar' class='proximo' />
+
+
+
+        <br /><br />
+      </form>
+    </div>
+
+
+    <div class='form4' style='display:none;'>
+      <form id = 'quadro4'>
+
+        <h2 id='exp1_4'> </h2>
+        <table>
+
+
+          <tr class="separator" />
+          <tr class='l2'>
+            <td id='p1f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1a' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p2f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1b' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1b' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1b' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p3f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1c' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1c' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1c' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p4f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1d' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1d' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1d' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p5f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1e' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1e' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1e' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p6f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1f' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1f' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1f' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p7f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1g' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1g' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1g' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p8f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1h' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1h' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1h' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+
+          <tr class='l2'>
+            <td id='p9f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1i' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1i' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1i' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p10f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1j' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1j' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1j' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p11f_1_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev1k' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev1k' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1k' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+        </table>
+
+
+        <h2 id='exp2_4'> </h2>
+        <table>
+
+
+          <tr class="separator" />
+          <tr class='l2'>
+            <td id='p1f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev1a' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p2f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2b' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2b' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2b' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p3f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2c' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2c' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2c' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p4f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2d' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2d' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2d' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p5f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2e' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2e' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2e' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p6f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2f' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2f' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2f' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p7f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2g' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2g' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2g' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p8f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2h' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2h' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2h' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+
+          <tr class='l2'>
+            <td id='p9f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2i' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2i' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2i' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p10f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2j' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2j' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2j' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p11f_2_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev2k' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev2k' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev2k' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+        </table>
+
+
+
+
+        <h2 id='exp3_4'> </h2>
+        <table>
+
+
+          <tr class="separator" />
+          <tr class='l2'>
+            <td id='p1f_3quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3a' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p2f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3b' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3b' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3b' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p3f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3c' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3c' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3c' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p4f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3d' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3d' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3d' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p5f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3e' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3e' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3e' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p6f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3f' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3f' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3f' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p7f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3g' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3g' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3g' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p8f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3h' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3h' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3h' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+
+          <tr class='l2'>
+            <td id='p9f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3i' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3i' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3i' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p10f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3j' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3j' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3j' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p11f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ep_ev3k' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ep_ev3k' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ep_ev3k' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+        </table>
+
+
+        <input id='subform4' type='submit' value='Continuar' class='proximo' />
+      </form>
+    </div>
+
+
+
+
+
+    <div id='form5' style='display:none;'>
+      <form id='quadro5'>
+        <h2 id='exp1_5'> </h2>
+        <table>
+
+
+          <tr class="separator" />
+          <tr class='l2'>
+            <td id='p1f_1_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev1a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev1a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev1a' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p2f_1_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev1b' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev1b' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev1b' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p3f_1_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev1c' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev1c' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev1c' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p4f_1_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev1d' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev1d' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev1d' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p5f_1_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev1e' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev1e' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev1e' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p6f_1_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev1f' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev1f' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev1f' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p7f_1_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev1g' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev1g' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev1g' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+        </table>
+
+
+
+
+
+        <h2 id='exp2_5'> </h2>
+        <table>
+          <tr class="separator" />
+          <tr class='l2'>
+            <td id='p1f_2_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev2a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev2a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev2a' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p2f_2_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev2b' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev2b' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev2b' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p3f_2_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev2c' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev2c' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev2c' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p4f_2_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev2d' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev2d' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev2d' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p5f_2_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev2e' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev2e' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev2e' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p6f_2_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev2f' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev2f' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev2f' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p7f_2_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev2g' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev2g' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev2g' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+        </table>
+
+
+
+
+
+
+        <h2 id='exp3_5'> </h2>
+        <table>
+
+
+          <tr class="separator" />
+          <tr class='l2'>
+            <td id='p1f_3_quatro'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev3a' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev3a' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev3a' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p2f_3_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev3b' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev3b' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev3b' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p3f_3_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev3c' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev3c' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev3c' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p4f_3_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev3d' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev3d' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev3d' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p5f_3_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev3e' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev3e' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev3e' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p6f_3_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev3f' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev3f' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev3f' />
+            </td>
+
+          </tr>
+          <tr class="separator" />
+
+          <tr class='l2'>
+            <td id='p7f_3_cinco'>
+              Pergunta 1:
+            </td>
+            <td>
+              Sim<input type='radio' value= '1' class='radio2' name='ea_ev3g' />
+            </td>
+            <td>
+              Não<input type='radio' value = '0' class='radio2' name='ea_ev3g' />
+            </td>
+            <td>
+              Não sei<input type='radio' value = '2' class='radio2' name='ea_ev3g' />
+            </td>
+
+          </tr>
+
+        </table>
+        <br />
+        <table class=table1>
+          <tr>
+            <td class='l1'>
+              <label > Hora fim: </label>: </label>
+            </td>
+            <td>
+              <input type='text' id='hora_fim' name='data' class='palavras'/>
+            </td>
+          </tr>
+        </table>
+        <br /><br />
+
+        <input id='subform5'type='submit' class='proximo' value='Continuar'/>
+      </form>
+
+    </div>
+
+    <div id='quadro6' style='display:none;'>
+      <h1>Obrigado!</h1>
+      <input id='reiniciar' type='button' class='proximo' value='Reiniciar'/>
+    </div>
+
+    <div id='quadro1_again' style='display:none;'>
+
+    </div>
+
+  </center>
+</body>
+</html>

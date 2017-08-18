@@ -1,0 +1,393 @@
+<form id='quadro1'>
+  <table class=table1>
+    <tr>
+      <td class='l1'>
+        <label >Número do questionário: </label>
+      </td>
+      <td>
+        <input type='numeric' id='id' name='id' class='palavras'/>
+      </td>
+    </tr>
+    <tr>
+      <td class='l1'>
+        <label>Nome: </label>
+      </td>
+      <td>
+        <input type='text' id='nome' name='nome' class='palavras' />
+      </td>
+    </tr>
+    <tr class="separator" />
+    <tr>
+      <td class='l1'>
+        <label>Palavra 1:</label>
+      </td>
+      <td>
+        <input ng-model='ng_p1' type='text' id='p1' name='p1' class='palavras'/>
+      </td>
+    </tr>
+    <tr>
+      <td class='l1'>
+        <label>Palavra 2:</label>
+      </td>
+      <td>
+        <input type='text' ng-model='np_p2' id='p2' name='p2' class='palavras'/>
+      </td>
+    </tr>
+    <tr>
+      <td class='l1'>
+        <label>Palavra 3:</label>
+      </td>
+      <td>
+        <input type='text' ng-model='np_p3' id='p3' name='p3' class='palavras'/>
+      </td>
+    </tr>
+    <tr>
+      <td class='l1'>
+        <label for='p4'>Palavra 4:</label>
+      </td>
+      <td>
+        <input type='text' id='p4' ng-model='np_p4' name='p4' class='palavras'/>
+      </td>
+    </tr>
+    <tr>
+      <td class='l1'>
+        <label>Palavra 5:</label>
+      </td>
+      <td>
+        <input type='text' ng-model='np_p5' id='p5' name='p5' class='palavras'/>
+      </td>
+    </tr>
+    <tr class="separator" />
+    <tr class="separator" />
+
+    <tr>
+      <td>
+        <label>Importância da palavra <b>{{ng_p1}}</b></label>
+      </td>
+      <td>
+        <input type='numeric' id='imp1' class='imp_palavras'/>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <label>Importância da palavra <b>{{np_p2}}</b></label>
+      </td>
+      <td>
+        <input type='numeric' id='imp2' class='imp_palavras'/>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <label>Importância da palavra <b>{{np_p3}}</b></label>
+      </td>
+      <td>
+        <input type='numeric' id='imp3' class='imp_palavras'/>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <label>Importância da palavra <b>{{np_p4}}</b></label>
+      </td>
+      <td>
+        <input type='numeric' id='imp4' class='imp_palavras'/>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <label>Importância da palavra <b>{{np_p5}}</b></label>
+      </td>
+      <td>
+        <input type='numeric' id='imp5' class='imp_palavras'/>
+      </td>
+    </tr>
+
+
+
+
+
+  </table>
+  <br />
+  <br />
+  <input type='submit' class='proximo' value='Continuar'/>
+</form>
+
+$(document).on('submit', '#quadro3', function(){
+
+
+  var nome = $('div_do_id').html().toString();
+  var p1 = $('#palavra1').html().toString();
+  var p2 = $('#palavra2').html().toString();
+  var p3 = $('#palavra3').html().toString();
+
+
+
+  var perg1 = $('input[name=perg1]:checked').val();
+  var perg2 = $('input[name=perg2]:checked').val();
+  var perg3 = $('input[name=perg3]:checked').val();
+
+  try{
+    leva2(id, perg1, perg2, perg3);
+
+  }catch(err){
+    alert(err);
+  }
+
+  var continuar = $('quadro3').html();
+  $('.principal').hide().html(form2).show('slow');
+  $('.text-header').html('');
+  return false;
+
+
+  $('#exp1_3').html('EXPRESSÃO: ' + tp1);
+
+  $('#ssss').html('AAAAAAAAAAAAAAAAa');
+  $('#p2f_1_tres').html(tp1 + ' faz parte de BARRAGEM DE FUNDÃO?');
+  $('#p3f_1_tres').html('BARRAGEM DE FUNDÃO e ' + tp1 + ' fazem parte do mesmo conceito?');
+###################333
+$('#exp1_3').html('EXPRESSÃO: ' + tp1);
+
+$('#p1f_1_tres').html('BARRAGEM DE FUNDÃO faz parte de ' + tp1 + '?');
+$('#p2f_1_tres').html(tp1 + ' faz parte de BARRAGEM DE FUNDÃO?');
+$('#p3f_1_tres').html('BARRAGEM DE FUNDÃO e ' +tp1+ ' fazem parte do mesmo conceito?');
+
+$('#exp2_3').html('EXPRESSÃO: ' + tp2);
+
+$('#p1f_2_tres').html('BARRAGEM DE FUNDÃO faz parte de ' + tp2 + '?');
+$('#p2f_2_tres').html(tp2 + ' faz parte de BARRAGEM DE FUNDÃO?');
+$('#p3f_2_tres').html('BARRAGEM DE FUNDÃO e ' +tp2+ ' fazem parte do mesmo conceito?');
+
+$('#exp1_3').html('EXPRESSÃO: ' + tp3);
+
+$('#p1f_3_tres').html('BARRAGEM DE FUNDÃO faz parte de ' + tp1 + '?');
+$('#p2f_3_tres').html(tp1 + ' faz parte de BARRAGEM DE FUNDÃO?');
+$('#p3f_3_tres').html('BARRAGEM DE FUNDÃO e ' +tp1+ ' fazem parte do mesmo conceito?');
+
+
+var proximo = $('#quadro3').html();
+$('.principal').hide().html(proximo).show('slow');
+$('.text-header').html('Esquema léxico');
+
+
+###################3
+
+
+var perg1 = $('input[name=perg1]:checked').val();
+var perg2 = $('input[name=perg2]:checked').val();
+var perg3 = $('input[name=perg3]:checked').val();
+
+try{
+  leva2(id, perg1, perg2, perg3);
+
+}catch(err){
+  alert(err);
+}
+
+var form2 = $('.form3').html();
+$('.principal').hide().html(form2).show('slow');
+$('.text-header').html('Parte 3');
+
+
+
+
+
+
+
+
+
+
+
+<h2 id='exp1_3'> </h2>
+<table>
+<tr class="separator" />
+
+  <tr class='l2'>
+    <td id='ssss'>
+      Pergunta 1:
+    </td>
+
+    <td>
+      Sim<input type='radio' value= '1' class='radio2' name='perg1' />
+    </td>
+    <td>
+      Não<input type='radio' value = '0' class='radio2' name='perg1' />
+    </td>
+    <td>
+      Não sei<input type='radio' value = '2' class='radio2' name='perg1' />
+    </td>
+
+  </tr>
+
+  <tr class="separator" />
+
+    <tr class='l2'>
+      <td id='p2f_1_tres'>
+        Pergunta 2:
+      </td>
+      <td>
+        Sim<input type='radio' value= '1' class='radio2' name='perg2' />
+      </td>
+      <td>
+        Não<input type='radio' value = '0' class='radio2' name='perg2' />
+      </td>
+      <td>
+        Não sei<input type='radio' value = '2' class='radio2' name='perg2' />
+      </td>
+
+    </tr>
+
+    <tr class="separator" />
+
+      <tr class='l2'>
+        <td id='p3f_1_tres'>
+          Pergunta 3:
+        </td>
+        <td>
+          Sim<input type='radio' value= '1' class='radio2' name='perg3' />
+        </td>
+        <td>
+          Não<input type='radio' value = '0' class='radio2' name='perg3' />
+        </td>
+        <td>
+          Não sei<input type='radio' value = '2' class='radio2' name='perg3' />
+        </td>
+
+      </tr>
+
+</table>
+<br /><br />
+
+
+
+
+<h2 id='exp2_3'> </h2>
+<table>
+<tr class="separator" />
+
+  <tr class='l2'>
+    <td id='p1f_2_tres'>
+      Pergunta 1:
+    </td>
+    <td>
+      Sim<input type='radio' value= '1' class='radio2' name='perg1' />
+    </td>
+    <td>
+      Não<input type='radio' value = '0' class='radio2' name='perg1' />
+    </td>
+    <td>
+      Não sei<input type='radio' value = '2' class='radio2' name='perg1' />
+    </td>
+
+  </tr>
+
+  <tr class="separator" />
+
+    <tr class='l2'>
+      <td id='p2f_2_tres'>
+        Pergunta 2:
+      </td>
+      <td>
+        Sim<input type='radio' value= '1' class='radio2' name='perg2' />
+      </td>
+      <td>
+        Não<input type='radio' value = '0' class='radio2' name='perg2' />
+      </td>
+      <td>
+        Não sei<input type='radio' value = '2' class='radio2' name='perg2' />
+      </td>
+
+    </tr>
+
+    <tr class="separator" />
+
+      <tr class='l2'>
+        <td id='p3f_2_tres'>
+          Pergunta 3:
+        </td>
+        <td>
+          Sim<input type='radio' value= '1' class='radio2' name='perg3' />
+        </td>
+        <td>
+          Não<input type='radio' value = '0' class='radio2' name='perg3' />
+        </td>
+        <td>
+          Não sei<input type='radio' value = '2' class='radio2' name='perg3' />
+        </td>
+
+      </tr>
+
+</table>
+<br /><br />
+
+
+
+
+<h2 id='exp3_3'> </h2>
+<table>
+<tr class="separator" />
+
+  <tr class='l2'>
+    <td id='p1f_3_tres'>
+      Pergunta 1:
+    </td>
+    <td>
+      Sim<input type='radio' value= '1' class='radio2' name='perg1' />
+    </td>
+    <td>
+      Não<input type='radio' value = '0' class='radio2' name='perg1' />
+    </td>
+    <td>
+      Não sei<input type='radio' value = '2' class='radio2' name='perg1' />
+    </td>
+
+  </tr>
+
+  <tr class="separator" />
+
+    <tr class='l2'>
+      <td id='p2f_3_tres'>
+        Pergunta 2:
+      </td>
+      <td>
+        Sim<input type='radio' value= '1' class='radio2' name='perg2' />
+      </td>
+      <td>
+        Não<input type='radio' value = '0' class='radio2' name='perg2' />
+      </td>
+      <td>
+        Não sei<input type='radio' value = '2' class='radio2' name='perg2' />
+      </td>
+
+    </tr>
+
+    <tr class="separator" />
+
+      <tr class='l2'>
+        <td id='p3f_3_tres'>
+          Pergunta 3:
+        </td>
+        <td>
+          Sim<input type='radio' value= '1' class='radio2' name='perg3' />
+        </td>
+        <td>
+          Não<input type='radio' value = '0' class='radio2' name='perg3' />
+        </td>
+        <td>
+          Não sei<input type='radio' value = '2' class='radio2' name='perg3' />
+        </td>
+
+      </tr>
+
+</table>
+<br /><br />
+
+
+
+<input type='submit' value='Continuar' class='proximo' />
+
+
+
+<br /><br />
