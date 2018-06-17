@@ -50,6 +50,7 @@ data_tl = trans(data = dados,
 
 #save(data_tl, file="dados_tl.RData")
 
+###LEIA
 load("dados_tl.RData")
 
 #arrumando empregos
@@ -518,7 +519,13 @@ plot(residuals(modelo3c)%>%qqnorm())
 
 medidas = influence(modelo3)
 #save(medidas, file='medidas.RData')
+
+
+
 load("medidas.RData")
+
+#não rodar, apenas leia o arquivo no load
+
 h <- medidas$hat
 ts <- resid(modelo3,type="pearson")/sqrt(1-h)
 td <- resid(modelo3,type="deviance")/sqrt(1-h)
@@ -579,6 +586,8 @@ p = ncol(X)
 td = resid(fit.model,type="deviance")/sqrt(1-h)
 e = matrix(0,n,100)
 #
+
+#não rodar, apenas leia o arquivo no load
 e = foreach(i=1:100, .combine = "cbind") %dopar% {
   dif <- runif(n) - fitted(fit.model)
   dif[dif >= 0 ] <- 0
