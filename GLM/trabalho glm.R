@@ -34,7 +34,7 @@ trans = function(data, colunas) {
     x = data[, col] %>% as.character()
     en = unique(x)
     tl = translate(content.vec = en, source.lang = "en", target.lang = "pt", 
-                   google.api.key = "AIzaSyApLX9Drt4aUc0NYbmwqKv5pYYUzx9fr6o")
+                   google.api.key = "")
     
     for(i in seq_along(tl)) {
       x[x==en[i]] = tl[i]
@@ -660,7 +660,7 @@ ggplot(data.frame(obs=1:length(pv), pv, clf, resp=factor(resp)),
 
 
 ##modelo completo bayesiano para analisar a as distribuições do Beta
-X = model.matrix(modelo1)
+X = model.matrix(modelo3)
 
 model_arq = "model {
 for(i in 1:n) {
