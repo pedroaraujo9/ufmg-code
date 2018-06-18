@@ -129,6 +129,7 @@ relacione = function(data, var, ordem = NULL) {
 
 #resposta
 do_bar(data_tl, "resposta") + labs(title="Resposta dos clientes ao banco ", x="Resposta", y="Proporção")
+ggsave("plots/plot1-Resposta.png", width = 6, height = 4, dpi = 1000)
 
 #distribuição da idade
 
@@ -140,101 +141,135 @@ do_bar(data_tl, "idade") +
                         "Desvio padrão: ", sd(data_tl$idade) %>% round(2), "\n")) + 
   theme(axis.text.x = element_text(angle = 90)) + labs(title="Distribuição da idade dos clientes", x="Idade", y="Proporção")
 
+ggsave("plots/plot2-idade.png", width = 8, height = 4, dpi = 1000)
 
 
 
 #distribuição da idade pela resposta
 ggplot(data_tl, aes(x=factor(idade), fill=resposta)) + 
   geom_bar(position = "fill", col="black") + 
-  labs(title="Distribuição de sucessos por idade", x="Idade", y="Frequência relativa") +
+  labs(title="Distribuição de sucessos por idade", x="Idade", y="Proporção") +
   theme_minimal() + 
   scale_fill_brewer(palette = "Blues", name="Resposta") +
   theme(axis.text.x = element_text(angle = 90)) 
+
+
+ggsave("plots/plot2-idade2.png", width = 8, height = 4, dpi = 1000)
                                                                     
 
 #distribuição do trabalho
-do_bar(data_tl, "trabalho", ordenar(data_tl$trabalho)) + 
+p1 = do_bar(data_tl, "trabalho", ordenar(data_tl$trabalho)) + 
   labs(title="Distribuição das profissões", x="Tipo de trabalho", y="Proporção") + 
   theme(axis.text.x = element_text(angle=90))
 
 data_tl$trabalho = factor(data_tl$trabalho, levels = ordenar(data_tl$trabalho))
-relacione(data_tl, "trabalho") + 
+p2 = relacione(data_tl, "trabalho") + 
   labs(title="Distribuição do tipo de trabalho na resposta",
        y="Proporção", x="Resposta") + 
   scale_fill_brewer(palette = "Set3", name="Tipo de trabalho") #parece não haver distinção dentro da resposta
 
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot3-profissao.png", width = 10, height = 5)
+
 #estado civil
-do_bar(data_tl, "estado_civil", ordenar(data_tl$estado_civil)) + 
+p1 = do_bar(data_tl, "estado_civil", ordenar(data_tl$estado_civil)) + 
   labs(title="Distribuição do estado civil" , x="Estado Civil", y="Proporção")
 
-relacione(data_tl, "estado_civil") + labs(title="Resposta do cliente de acordo com o estado civil", x="Resposta", y="Frequência relativa") + scale_fill_brewer(name="Estado civil")#solteiros parecem ser mais dispostos a aceitar
+p2 = relacione(data_tl, "estado_civil") + 
+  labs(title="Resposta do cliente de acordo com o estado civil", x="Resposta", y="Proporção") + 
+  scale_fill_brewer(name="Estado civil")#solteiros parecem ser mais dispostos a aceitar
+
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot4-estado-civil.png", width = 10, height = 5)
 
 #idade/estado civil
 ggplot(data_tl, aes(x=factor(idade), fill=estado_civil)) + 
   geom_bar(position = "fill", col="black") + 
   theme_minimal() + 
   scale_fill_brewer(palette = "Blues", name="Estado civil") +
-  theme(axis.text.x = element_text(angle=90)) + labs(title="Distribuição do estado civil de acordo com a idade", x="Idade", y="Frequência relativa")
+  theme(axis.text.x = element_text(angle=90)) + 
+  labs(title="Distribuição do estado civil de acordo com a idade", x="Idade", y="Proporção")
 
+ggsave("plots/plot5-estado-civil-idade.png", width = 8, height = 4, dpi=1000)
 #educação
 
-do_bar(data_tl, "educacao", ordem = c("superior", "técnico", "ensino médio",
+p1=do_bar(data_tl, "educacao", ordem = c("superior", "técnico", "ensino médio",
                                       "ciclo3", "ciclo2", "ciclo1", 
                                       "analfabeto", "desconhecido")) + 
-  theme(axis.text.x = element_text(angle = 90)) + labs(title="Distribuição da educação", x="Educação", y="Proporção")
+  theme(axis.text.x = element_text(angle = 90)) + 
+  labs(title="Distribuição da educação", x="Educação", y="Proporção")
 
 
-relacione(data_tl, "educacao") + labs(title="Resposta do cliente de acordo com a educação", x="Resposta", y="Frequência relativa") + scale_fill_brewer(name="Educação")#parece ter relação
+p2=relacione(data_tl, "educacao") + 
+  labs(title="Resposta do cliente de acordo com a educação", x="Resposta", y="Proporção") + 
+  scale_fill_brewer(name="Educação")#parece ter relação
 
-data_tl$educacao = factor(data_tl$educacao, levels = rev(c("superior", "técnico", "ensino médio",
-                                                           "ciclo3", "ciclo2", "ciclo1", 
-                                                           "analfabeto", "desconhecido")))
+data_tl$educacao = factor(data_tl$educacao, 
+                          levels = rev(c("superior", "técnico", "ensino médio",
+                                          "ciclo3", "ciclo2", "ciclo1", 
+                                          "analfabeto", "desconhecido")))
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot6-educacao.png", width = 10, height = 5, dpi=1000)
+
 
 #relação entre educacao e idade
 ggplot(data_tl, aes(x=factor(idade), fill=educacao)) + 
   geom_bar(position = "fill", col='black') + 
-  scale_fill_brewer(palette = "Blues", name="Educação") + labs(title="Distribuição da educação pela idade", x="Idade", y="Frequência relativa")
+  scale_fill_brewer(palette = "Blues", name="Educação") + 
+  labs(title="Distribuição da educação pela idade", x="Idade", y="Proporção") + 
+  theme(axis.text.x = element_text(angle=90))
 
+ggsave("plots/plot7-educacao-idade.png", width = 8, height = 4, dpi=1000)
 
 #talvez o estado civil já traga a informação da idade
 
 #indimplente
 table(data_tl$inadimplente, data_tl$resposta)
-do_bar(data_tl, "inadimplente") +labs(title="Distribuição da inadimplência de crédito", x="Inadimplente", y="Proporção")#eliminar variável 
-relacione(data_tl, "inadimplente") + labs(title="Resposta de acordo com inadimplência de crédito", x="Resposta", y="Frequência relativa") + scale_fill_brewer(name="Inadimplência de crédito")#sem relação aparente
+p1=do_bar(data_tl, "inadimplente") +labs(title="Distribuição da inadimplência de crédito", x="Inadimplente", y="Proporção")#eliminar variável 
+p2=relacione(data_tl, "inadimplente") + labs(title="Resposta de acordo com inadimplência de crédito", x="Resposta", y="Proporção") + scale_fill_brewer(name="Inadimplência de crédito")#sem relação aparente
 
-
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot8-inadimplente.png", width = 10, height = 5, dpi=1000)
 
 
 #empréstimo casa
 table(data_tl$casa_emprestimo, data_tl$resposta)
-do_bar(data_tl, "casa_emprestimo") + labs(title="Distribuição do empréstimo habitacional", x="Empréstimo habitacional", y="Proporção")
-relacione(data_tl, "casa_emprestimo") + labs(title="Resposta do cliente de acoro com o empréstimo habitacional", x="Resposta", y="Frequência absoluta") + scale_fill_brewer(name="Empréstimo habitacional")
+p1=do_bar(data_tl, "casa_emprestimo") + labs(title="Distribuição do empréstimo habitacional", x="Empréstimo habitacional", y="Proporção")
+p2=relacione(data_tl, "casa_emprestimo") + labs(title="Resposta do cliente de acoro com\n o empréstimo habitacional", x="Resposta", y="Frequência absoluta") + scale_fill_brewer(name="Empréstimo habitacional")
 
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot9-casa-emprestimo.png", width = 10, height = 5, dpi=1000)
 
 #empréstimo pessoal
 table(data_tl$pessoal_emprestimo, data_tl$resposta)
-do_bar(data_tl, "pessoal_emprestimo") + labs(title="Distribuição do empréstimo pessoal", x="Empréstimo pessoal", y="Proporção")
-relacione(data_tl, "pessoal_emprestimo") + labs(title="Resposta de acordo com o empréstimo pessoal", x="Resposta", y="Frequência relativa") + scale_fill_brewer(name="Empréstimo pessoal")
-
+p1=do_bar(data_tl, "pessoal_emprestimo") + labs(title="Distribuição do empréstimo pessoal", x="Empréstimo pessoal", y="Proporção")
+p2=relacione(data_tl, "pessoal_emprestimo") + labs(title="Resposta de acordo com o empréstimo pessoal", x="Resposta", y="Proporção") + scale_fill_brewer(name="Empréstimo pessoal")
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot10-pessoal-emprestimo.png", width = 10, height = 5, dpi=1000)
 #Tipo de contato 
 table(data_tl$tipo_contato, data_tl$resposta)
-do_bar(data_tl, "tipo_contato", ordem = rev(c("Telefone","celular"))) + labs(title="Distribuição do tipo de ligação", x="Tipo de ligação", y="Proporção")
-relacione(data_tl, "tipo_contato") + labs(title="Resposta de acordo com o tipo de ligação", x="Resposta", y="Frequência relativa") + scale_fill_brewer(name="Tipo de ligação")
-
+p1=do_bar(data_tl, "tipo_contato", ordem = rev(c("Telefone","celular"))) + labs(title="Distribuição do tipo de ligação", x="Tipo de ligação", y="Proporção")
+p2=relacione(data_tl, "tipo_contato") + labs(title="Resposta de acordo com o tipo de ligação", x="Resposta", y="Proporção") + scale_fill_brewer(name="Tipo de ligação")
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot11-tipo-ligacao.png", width = 10, height = 5, dpi=1000)
 #dia da semana
 table(data_tl$dia, data_tl$resposta)
-do_bar(data_tl, "dia", ordem=c("seg","ter", "qua", "qui", "sex")) + labs(title="Distribuição do dia da semana que o cliente foi contatado", x="Dia da semana", y="Proporção") 
-relacione(data_tl, "dia", ordem = c("seg","ter", "qua", "qui", "sex")) + labs(title="Resposta de acordo o dia da semana contatado", x="Resposta", y="Frequência relativa") + scale_fill_brewer(name="Dia da semana")
+p1=do_bar(data_tl, "dia", ordem=c("seg","ter", "qua", "qui", "sex")) + labs(title="Distribuição do dia da semana que o cliente foi contatado", x="Dia da semana", y="Proporção") 
+p2=relacione(data_tl, "dia", ordem = c("seg","ter", "qua", "qui", "sex")) + labs(title="Resposta de acordo o dia da semana contatado", x="Resposta", y="Proporção") + scale_fill_brewer(name="Dia da semana")
+
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot12-dia.png", width = 10, height = 5, dpi=1000)
 
 
 #mes table(data_tl$mes, data_tl$resposta)
-do_bar(data_tl, "mes", ordem = c("jan", "feb", "mar", "abril", "maio", "junho", 
+p1=do_bar(data_tl, "mes", ordem = c("jan", "feb", "mar", "abril", "maio", "junho", 
                                  "julho", "aug", "sep", "oct", "nov", "dec")) + labs(title="Distribuição do mês que o cliente doi contatado", x="Mês", y="Proporção")
 
-relacione(data_tl, "mes", ordem = c("jan", "feb", "mar", "abril", "maio", "junho", 
-                                    "julho", "aug", "sep", "oct", "nov", "dec")) + labs(title="Resposta de acordo com o mês que o cliente foi contatado", x="Resposta", y="Frequência relativa") + scale_fill_brewer(name="Mês")
-
+p2=relacione(data_tl, "mes", ordem = c("jan", "feb", "mar", "abril", "maio", "junho", 
+                                    "julho", "aug", "sep", "oct", "nov", "dec")) + 
+  labs(title="Resposta de acordo com o mês \nque o cliente foi contatado", x="Resposta", y="Proporção") + scale_fill_brewer(name="Mês")
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot13-mes.png", width = 10, height = 5, dpi=1000)
 #duracao da ligação
 summary(data_tl$duracao)
 sd(data_tl$duracao)
@@ -242,9 +277,13 @@ sd(data_tl$duracao)
 maximo_duracao = which.max(data_tl$duracao)
 
 #histograma todas as obs
-ggplot(data_tl, aes(x=duracao)) + 
+p1=ggplot(data_tl, aes(x=duracao)) + 
   geom_histogram(col='white', fill="dodgerblue") + 
-  theme_minimal() + labs(title="Distribuição do tempo de duração da última ligação", x="Tempo de duração da última ligação", y="Frequência relativa")
+  theme_minimal() + labs(title="Distribuição do tempo de duração da última ligação", 
+                         x="Tempo de duração da última ligação", y="Proporção") + 
+  annotate("text", x=3000,y=15000, 
+           label = "Média: 258.3\n Mediana: 319\n Máximo: 4918\n Desvio padrão: 259.2")
+
 
 
 
@@ -257,19 +296,21 @@ data_tl %>%
   theme_minimal() + labs(title="Distribuição do tempo de duração da última ligação", x="Tempo de duração da última ligação", y="Densidade") + scale_fill_brewer(name="Resposta")
 
 
-data_tl %>% 
+p2=data_tl %>% 
   filter(duracao < 4000) %>% 
   ggplot(aes(x=duracao, fill=resposta)) +
   scale_fill_brewer(palette = "Blues", name="Resposta") + 
   geom_histogram(col='black', aes(y=..density..)) + 
   facet_grid(~resposta) + 
-  theme_minimal() + labs(title="Distribuição do tempo de duração da última ligação por resposta", x="Tempo de duração da última ligação", y="Densidade")
-
+  theme_minimal() + 
+  labs(title="Distribuição do tempo de duração da última\n ligação por resposta", x="Tempo de duração da última ligação", y="Densidade")
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot14-tempo.png", width = 10, height = 5, dpi=1000)
 
 #chamadas 
 summary(data_tl$chamadas)
 
-do_bar(data_tl, "chamadas") + 
+p1=do_bar(data_tl, "chamadas") + 
   theme(axis.text.x = element_text(angle=90)) + labs(title="Distribuição do número de ligações para o mesmo cliente", x="Número de ligações para o mesmo cliente", y="Proporção")
 
 maximo_chamadas = which.max(data_tl$chamadas)
@@ -283,23 +324,38 @@ data_tl$chamadas_agr = cut(data_tl$chamadas,
                                       "41-50", "51-60"))
 
 #distribuição
-relacione(data_tl, "chamadas_agr") + labs(title="Resposta de acordo com o número de ligações para o mesmo cliente", x="Resposta", y="Frequência relativa") + scale_fill_brewer(name="Número de ligações")
-
+p2=relacione(data_tl, "chamadas_agr") + labs(title="Resposta de acordo com o número de ligações para o mesmo cliente", x="Resposta", y="Proporção") + 
+  scale_fill_brewer(name="Número de ligações")
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot15-num-chamadas.png", width = 10, height = 5, dpi=1000)
 
 
 #chamadas_previas (numéro de ligações antes)
 table(data_tl$chamadas_prev, data_tl$resposta)
-do_bar(data_tl, "chamadas_prev") + labs(title="Distribuição do números de ligações feitas antes da campanha publicitária para o cliente", x="Números de ligações feitas antes da campanha publicitária para o cliente", y="Proporção")
+p1=do_bar(data_tl, "chamadas_prev") + 
+  labs(title="Distribuição do números de ligações feitas \nantes da campanha publicitária para o cliente",
+       x="Números de ligações", y="Proporção")
 
+p2=relacione(data_tl, "chamadas_prev") + 
+  labs(title="Distribuição pela resposta", x="Resposta do cliente", 
+       y="Proporção") + 
+  scale_fill_brewer(name="Chamadas prévias")
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot16-chamadas-previas.png", width = 10, height = 5, dpi=1000)
 #dias sem ligar #variável será descartada
 
 table(data_tl$pausa)
 do_bar(data_tl, "pausa") + labs(title="Distribuição do número de dias que passaram após a última ligação", x="Número de dias que passaram após a última ligação", y="Proporção")
-
+ggsave("plots/plot17-pausa.png", width = 10, height = 5, dpi=1000)
 #campanhas anteriores
 table(data_tl$status_prev, data_tl$resposta)
-do_bar(data_tl, "status_prev", ordem=c("sucesso", "falha", "inexistente")) + labs(title="Distribuição do resultado da campanha publicitária anterior", x="Resultado da campanha publicitária anterior", y="Proporção")
-relacione(data_tl, "status_prev", ordem = c("sucesso", "falha", "inexistente")) + labs(title="Resposta de acordo com o resultado da campanha publicitária anterior", x="Resposta", y="Frequência relativa")  + scale_fill_brewer(name="Resultado")
+p1=do_bar(data_tl, "status_prev", ordem=c("sucesso", "falha", "inexistente")) + labs(title="Distribuição do resultado da campanha publicitária anterior", x="Resultado da campanha publicitária anterior", y="Proporção")
+p2=relacione(data_tl, "status_prev", ordem = c("sucesso", "falha", "inexistente")) + 
+  labs(title="Resposta de acordo com \no resultado da campanha publicitária anterior", 
+       x="Resposta", y="Proporção")  + scale_fill_brewer(name="Resultado")
+
+pg = grid.arrange(p1, p2, nrow = 1)
+ggsave(pg, file="plots/plot17-status-prev.png", width = 10, height = 5, dpi=1000)
 
 
 #variacao_emprego
@@ -320,6 +376,8 @@ dfve %>% filter(Var2 == "sim") %>%
   labs(title="Proporção de sucessos pela taxa de variação de emprego", x="Taxa de variação de emprego", y="Proporção de Y=1") + 
   theme_bw()
 
+ggsave("plots/plot18-variacao-taxa-empregados.png", width = 10, height = 5, dpi=1000)
+
 
 #Indice de preços
 summary(data_tl$ipc)
@@ -331,7 +389,8 @@ data_tl$ipc %>% table(data_tl$resposta) %>% prop.table(margin=1) %>%
   ggplot(aes(x=`.`,y=Freq)) + 
   geom_point() + 
   theme_bw() + 
-  theme(axis.text.x = element_text(angle=90)) + labs(title="Proporção de sucessos pelo índice de preços do consumidor", x="Índice de preços do consumidor", y="Proporção de Y=1")
+  theme(axis.text.x = element_text(angle=90)) + labs(title="Proporção de sucessos pelo índice de preços do consumidor", x="Índice de preços do consumidor", y="Proporção de sucessos")
+ggsave("plots/plot19-ipc.png", width = 10, height = 5, dpi=1000)
 
 #histograma
 data_tl$ipc %>% table(data_tl$resposta) %>% prop.table(margin=1) %>% 
@@ -340,7 +399,7 @@ data_tl$ipc %>% table(data_tl$resposta) %>% prop.table(margin=1) %>%
   geom_bar(col='black', position = "fill", stat='identity') +
   scale_fill_brewer(palette = "Blues", name="Resposta") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90)) + labs(title="Ditribuição das repostas pelo índice de preços do consumidor", x="Índice de preços do consumidor", y="Frequência relativa")
+  theme(axis.text.x = element_text(angle = 90)) + labs(title="Ditribuição das repostas pelo índice de preços do consumidor", x="Índice de preços do consumidor", y="Proporção")
 
 
 #eu_taxa 
@@ -350,14 +409,21 @@ sd(data_tl$eu_taxa)
 data_tl$eu_taxa %>% table(data_tl$resposta) %>% prop.table(margin=1) %>% 
   as.data.frame() %>%
   filter(Var2 == "sim") %>%
-  ggplot(aes(x=`.`, y=Freq)) + 
-  geom_point() + 
-  theme_minimal() + labs(title="Distribuição da taxa Euribor 3 meses", x="Taxa Euribor 3 meses", y="Frequência relativa")
+  ggplot(aes(x=as.numeric(as.character(`.`)), y=Freq)) + 
+  geom_point() +
+  theme_minimal() + labs(title="Distribuição da taxa Euribor 3 meses", 
+                         x="Taxa Euribor 3 meses", y="Proporção de sucessos") + 
+  theme_bw() 
+
+ggsave("plots/plot20-euribor.png", width = 10, height = 5, dpi=1000)
+
+
+
 
 data_tl %>% ggplot(aes(x=eu_taxa, fill=resposta)) +
   geom_histogram(bins=11, position = "fill", col='black') + 
   scale_fill_brewer(palette = "Blues", name="Resposta") + 
-  theme_minimal() + labs(title="Distribuição da taxa Euribor 3 meses por resposta", x="Taxa Euribor 3 meses", y="Frequência relativa")
+  theme_minimal() + labs(title="Distribuição da taxa Euribor 3 meses por resposta", x="Taxa Euribor 3 meses", y="Proporção")
 
 
 #corelação
@@ -368,7 +434,11 @@ ggcorrplot(cor(data_tl[,sapply(data_tl, FUN=is.numeric)], method='spearman'), hc
            lab_size = 3, 
            method="circle", 
            title="Correlograma das variáveis numéricas", 
+           colors = c("skyblue", "dodgerblue", "royalblue4"), 
            ggtheme=theme_bw)
+
+
+ggsave("plots/plot21-correlograma.png", width = 5, height = 5, dpi=1000)
 
 
 #elimando colunas que não são úteis para a modelagem
@@ -539,12 +609,16 @@ ggplot(data.frame(h=h,y=fitted(modelo3)), aes(x=y,y=h)) +
   labs(title="Pontos de alavanca", x=" Valores preditos", y="Medida h") + 
   theme_bw()
 
+ggsave(file="plots/plot22-medida-h.png", width = 10, height = 7, dpi=1000)
+
 #distância de cook
 ggplot(data.frame(x=1:length(di), di=di), aes(x,di)) + 
   geom_point(alpha=0.6) + 
   annotate(geom = "text", x=12500, y=0.22, label = "11223") + 
   theme_bw() + 
   labs(title="Pontos de influência", x="Índice", y="Distância de Cook")
+ggsave(file="plots/plot23-distancia-cook.png", width = 10, height = 7, dpi=1000)
+
 
 #modelo sem as obervações influentes
 modelo5 = glm(ybin ~ trabalho + tipo_contato + mes + dia + duracao + chamadas + 
@@ -568,7 +642,8 @@ ggplot(data.frame(x=1:length(td), y=td), aes(x,y)) +
   geom_hline(yintercept = -2, col='blue') + 
   geom_hline(yintercept = 2, col='blue') + 
   theme_bw() + 
-  labs(y="Componentes do desvio", x="Índice", title="")
+  labs(y="Componentes do desvio", x="Índice", title="Outliers")
+ggsave("plots/plot24-outilers.png", width = 10, height = 7, dpi=1000)
 
 #####envelope
 library(doParallel)
@@ -630,28 +705,33 @@ ggplot(data.frame(e1x,e1y, e2x,e2y,medx,medy,td,x,y), aes(x=x, y=y)) +
   geom_line(aes(x=e2x,y=e2y), size=1, col='blue') + 
   geom_line(aes(x=medx,y=medy), size=1, col='grey') +
   theme_minimal() +labs(title="Gráfico de envelope", x="Percentis N(0,1)",y="Resíduos")
-
+ggsave("plots/plot25-envelope.png", width = 10, height = 7, dpi=1000)
 ########################3333
 #curva ROC
 library(Epi)
-RO(form=ybin ~ trabalho + tipo_contato + mes + dia + duracao + chamadas + 
-      status_prev + ipc + eu_taxa + empregados, data=treino, MI=FALSE) #p>0.091
-
+jpeg('rplot.jpg', width = 10, height = 8, units = 'in', res=1000)
+ROC(form=ybin ~ trabalho + tipo_contato + mes + dia + duracao + chamadas + 
+      status_prev + ipc + eu_taxa + empregados, data=treino, MI=FALSE, plot='ROC')
 
 #validacao 
-logitpv = predict(modelo3, validacao[1:1000,]) #logit da validacao
+logitpv = predict(modelo3, validacao[1:10000,]) #logit da validacao
 
 pv = exp(logitpv)/(1+exp(logitpv)) #probabilidade estimada
 clf = ifelse(pv > 0.1, "Sim", "Não") #classificacao de acordo com a curva ROC
-resp = ifelse(validacao[1:1000,]$ybin==1, "Sim", "Não")
+resp = ifelse(validacao[1:10000,]$ybin==1, "Sim", "Não")
 
-table(clf, "y"= validacao[1:1000,]$ybin) %>% prop.table(margin=1)
 
-ggplot(data.frame(obs=1:length(pv), pv, clf, resp=factor(resp)), 
-       aes(x=obs, pv, colour=resp)) + 
+tab = table(clf, "y"= validacao[1:10000,]$ybin) %>% prop.table(margin=1) %>% as.data.frame()
+
+ggplot(data.frame(obs=1:length(pv), pv, clf, Resposta=factor(resp)), 
+       aes(x=obs, pv, colour=Resposta)) + 
   geom_point(alpha=0.5) +
   geom_hline(yintercept = 0.1, col = "black", size=1) + 
-  scale_colour_manual("point_color", values=c("darkslategray1", "blue")) + labs(x="Observações")
+  scale_colour_manual("point_color", values=c("red", "blue")) + 
+  labs(x="Observações", y="Predito") + 
+  theme_bw()
+
+ggsave("plots/plot27-sensibilidade.png", width = 7, height = 6, dpi=1000)
 
 
 ##fazer shiny com especificidade, gráfico, 
@@ -683,7 +763,7 @@ fim = Sys.time()
 fim-ini
 
 save(post, file="modeloCompletoPost.RData")
-
+load("modeloCompletoPost.RData")
 post_burn = post[[1]] %>% as.data.frame()
 post_burn = post_burn[-c(1:1000),] #burn-in
 
@@ -692,7 +772,7 @@ medias = map_dbl(post_burn, mean);medias
 desvio = map_dbl(post_burn, sd);desvio
 HDInterval::hdi(post_burn)
 
-cbind(medias, coef(modelo1)) %>% round(4)
+cbind(medias, coef(modelo3)) %>% round(4)
 
 
 cumuplot(post) #convergência
@@ -713,51 +793,3 @@ be %>%
   geom_vline(xintercept = 0, col='blue') 
   geom_density_ridges()
 #melhor modelo é o logístico
-
-qqnorm(residuals(modelo4), xlab="Quantis teóricos", ylab="Quantis amostrais", title="Normal Q-Q Plot") 
-qqline(residuals(modelo4))
-
-
-
-
-
-
-
-
-
-#modelo sem as variáveis significativas
-modelo3 = glm(ybin ~.-idade-mes_num-chamadas_prev-pausa-credito_default-idade-dia-saldo-credito_default,
-              family=binomial(link="logit"), data=treino)
-AIC(modelo3)
-AIC(modelo2)
-AIC(modelo1)
-
-qqnorm(residuals(modelo3), xlab="Quantis teóricos", ylab="Quantis amostrais", title="Normal Q-Q Plot")
-
-
-library(MASS)
-stepAIC(modelo1)
-glm(formula = ybin ~ idade + trabalho + estado_civil + educacao + 
-      credito_default + casa_emprestimo + emprestimo + contato_tipo + 
-      dia + mes + duracao + chamadas + chamadas_prev + status_prev, 
-    family = binomial(link = "logit"), data = treino, na.action = "na.fail")
-
-
-modeloidlogit = glm(formula = ybin ~ trabalho + estado_civil + educacao + saldo + 
-                      casa_emprestimo + emprestimo + contato_tipo + dia + mes + 
-                      duracao + chamadas + chamadas_prev + status_prev, family = binomial, 
-                    data = modelo_set, na.action = "na.fail")
-
-modeloidprobbit = glm(formula = ybin ~ trabalho + estado_civil + educacao + saldo + 
-                        casa_emprestimo + emprestimo + contato_tipo + dia + mes + 
-                        duracao + chamadas + chamadas_prev + status_prev, 
-                      family = binomial(link="probit"), 
-                      data = modelo_set, na.action = "na.fail", subset = -c(maximo_chamadas,
-                                                                            maximo_duracao, 
-                                                                            maximo_saldo))
-AIC(modeloidlogit) 
-AIC(modeloidprobbit) 
-
-AIC(modeloid)
-summary(modeloid)
-
