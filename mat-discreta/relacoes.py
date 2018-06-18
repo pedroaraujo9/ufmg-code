@@ -6,7 +6,14 @@ class Relacao:
         self.n = len(R)
         self.setR = setR
 
-    
+        matrix = []
+        for i in range(len(self.setR)):
+            matrix.append([0]*len(self.setR))
+        self.matrix = matrix
+        for i in self.R:
+            matrix[i[0]-1][i[1]-1] = 1
+
+        
 
     def is_reflexive(self):
         status = []
@@ -49,12 +56,3 @@ class Relacao:
             return True
         else:
             return False
-
-
-conj = [1,2,3]
-R = [(2,1), (2,2), (1,2)]
-
-r1 = Relacao(R, conj)
-print(r1.is_reflexive())
-print(r1.is_simetric())
-print(r1.is_antisimetric())
