@@ -20,12 +20,12 @@ envelope = function(modelo) {
   e = matrix(0,n,100)
   
   e = foreach(i=1:100, .combine = "cbind") %dopar% {
-    dif = runif(n) - fitted(fit.model)
+    dif = runif(n) - fitted(modelo)
     dif[dif >= 0 ] = 0
     dif[dif<0] = 1
     nresp = dif
     fit <- glm(nresp ~ X, family=binomial)
-    h = influence(fit)$hat
+    h = influence(modelo)$hat
     sort(resid(fit,type="deviance")/sqrt(1-h))
     
   }
