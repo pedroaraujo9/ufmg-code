@@ -129,7 +129,7 @@ relacione = function(data, var, ordem = NULL) {
 
 #resposta
 do_bar(data_tl, "resposta") + labs(title="Resposta dos clientes ao banco ", x="Resposta", y="Proporção")
-ggsave("plots/plot1-Resposta.png", width = 6, height = 4, dpi = 1000)
+ggsave("plots/plot1-Resposta.png", width = 5, height = 3, dpi = 1000)
 
 #distribuição da idade
 
@@ -141,7 +141,7 @@ do_bar(data_tl, "idade") +
                         "Desvio padrão: ", sd(data_tl$idade) %>% round(2), "\n")) + 
   theme(axis.text.x = element_text(angle = 90)) + labs(title="Distribuição da idade dos clientes", x="Idade", y="Proporção")
 
-ggsave("plots/plot2-idade.png", width = 8, height = 4, dpi = 1000)
+ggsave("plots/plot2-idade.png", width = 7, height = 4, dpi = 1000)
 
 
 
@@ -154,7 +154,7 @@ ggplot(data_tl, aes(x=factor(idade), fill=resposta)) +
   theme(axis.text.x = element_text(angle = 90)) 
 
 
-ggsave("plots/plot2-idade2.png", width = 8, height = 4, dpi = 1000)
+ggsave("plots/plot2-idade2.png", width = 6.5, height = 3.5, dpi = 1000)
                                                                     
 
 #distribuição do trabalho
@@ -164,23 +164,23 @@ p1 = do_bar(data_tl, "trabalho", ordenar(data_tl$trabalho)) +
 
 data_tl$trabalho = factor(data_tl$trabalho, levels = ordenar(data_tl$trabalho))
 p2 = relacione(data_tl, "trabalho") + 
-  labs(title="Distribuição do tipo de trabalho na resposta",
+  labs(title="Distribuição do tipo de trabalho \n na resposta",
        y="Proporção", x="Resposta") + 
   scale_fill_brewer(palette = "Set3", name="Tipo de trabalho") #parece não haver distinção dentro da resposta
 
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot3-profissao.png", width = 10, height = 5)
+ggsave(pg, file="plots/plot3-profissao.png", width = 6.5, height = 4)
 
 #estado civil
 p1 = do_bar(data_tl, "estado_civil", ordenar(data_tl$estado_civil)) + 
   labs(title="Distribuição do estado civil" , x="Estado Civil", y="Proporção")
 
 p2 = relacione(data_tl, "estado_civil") + 
-  labs(title="Resposta do cliente de acordo com o estado civil", x="Resposta", y="Proporção") + 
+  labs(title="Resposta do cliente de acordo \n com o estado civil", x="Resposta", y="Proporção") + 
   scale_fill_brewer(name="Estado civil")#solteiros parecem ser mais dispostos a aceitar
 
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot4-estado-civil.png", width = 10, height = 5)
+ggsave(pg, file="plots/plot4-estado-civil.png", width = 6.5, height = 4)
 
 #idade/estado civil
 ggplot(data_tl, aes(x=factor(idade), fill=estado_civil)) + 
@@ -190,7 +190,7 @@ ggplot(data_tl, aes(x=factor(idade), fill=estado_civil)) +
   theme(axis.text.x = element_text(angle=90)) + 
   labs(title="Distribuição do estado civil de acordo com a idade", x="Idade", y="Proporção")
 
-ggsave("plots/plot5-estado-civil-idade.png", width = 8, height = 4, dpi=1000)
+ggsave("plots/plot5-estado-civil-idade.png", width = 6.5, height = 4, dpi=1000)
 #educação
 
 p1=do_bar(data_tl, "educacao", ordem = c("superior", "técnico", "ensino médio",
@@ -201,7 +201,7 @@ p1=do_bar(data_tl, "educacao", ordem = c("superior", "técnico", "ensino médio"
 
 
 p2=relacione(data_tl, "educacao") + 
-  labs(title="Resposta do cliente de acordo com a educação", x="Resposta", y="Proporção") + 
+  labs(title="Resposta do cliente de \n acordo com a educação", x="Resposta", y="Proporção") + 
   scale_fill_brewer(name="Educação")#parece ter relação
 
 data_tl$educacao = factor(data_tl$educacao, 
@@ -209,7 +209,7 @@ data_tl$educacao = factor(data_tl$educacao,
                                           "ciclo3", "ciclo2", "ciclo1", 
                                           "analfabeto", "desconhecido")))
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot6-educacao.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot6-educacao.png", width = 6.5, height = 4, dpi=1000)
 
 
 #relação entre educacao e idade
@@ -219,57 +219,57 @@ ggplot(data_tl, aes(x=factor(idade), fill=educacao)) +
   labs(title="Distribuição da educação pela idade", x="Idade", y="Proporção") + 
   theme(axis.text.x = element_text(angle=90))
 
-ggsave("plots/plot7-educacao-idade.png", width = 8, height = 4, dpi=1000)
+ggsave("plots/plot7-educacao-idade.png", width = 6.5, height = 4, dpi=1000)
 
 #talvez o estado civil já traga a informação da idade
 
 #indimplente
 table(data_tl$inadimplente, data_tl$resposta)
-p1=do_bar(data_tl, "inadimplente") +labs(title="Distribuição da inadimplência de crédito", x="Inadimplente", y="Proporção")#eliminar variável 
-p2=relacione(data_tl, "inadimplente") + labs(title="Resposta de acordo com inadimplência de crédito", x="Resposta", y="Proporção") + scale_fill_brewer(name="Inadimplência de crédito")#sem relação aparente
+p1=do_bar(data_tl, "inadimplente") +labs(title="Distribuição da \n inadimplência de crédito", x="Inadimplente", y="Proporção")#eliminar variável 
+p2=relacione(data_tl, "inadimplente") + labs(title="Resposta de acordo com \n inadimplência de crédito", x="Resposta", y="Proporção") + scale_fill_brewer(name="Inadimplência de crédito")#sem relação aparente
 
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot8-inadimplente.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot8-inadimplente.png", width = 6.5, height = 4, dpi=1000)
 
 
 #empréstimo casa
 table(data_tl$casa_emprestimo, data_tl$resposta)
-p1=do_bar(data_tl, "casa_emprestimo") + labs(title="Distribuição do empréstimo habitacional", x="Empréstimo habitacional", y="Proporção")
-p2=relacione(data_tl, "casa_emprestimo") + labs(title="Resposta do cliente de acoro com\n o empréstimo habitacional", x="Resposta", y="Frequência absoluta") + scale_fill_brewer(name="Empréstimo habitacional")
+p1=do_bar(data_tl, "casa_emprestimo") + labs(title="Distribuição do empréstimo\n habitacional", x="Empréstimo habitacional", y="Proporção")
+p2=relacione(data_tl, "casa_emprestimo") + labs(title="Resposta do cliente de acoro\n com o empréstimo habitacional", x="Resposta", y="Frequência absoluta") + scale_fill_brewer(name="Empréstimo habitacional")
 
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot9-casa-emprestimo.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot9-casa-emprestimo.png", width = 6.5, height = 4, dpi=1000)
 
 #empréstimo pessoal
 table(data_tl$pessoal_emprestimo, data_tl$resposta)
-p1=do_bar(data_tl, "pessoal_emprestimo") + labs(title="Distribuição do empréstimo pessoal", x="Empréstimo pessoal", y="Proporção")
-p2=relacione(data_tl, "pessoal_emprestimo") + labs(title="Resposta de acordo com o empréstimo pessoal", x="Resposta", y="Proporção") + scale_fill_brewer(name="Empréstimo pessoal")
+p1=do_bar(data_tl, "pessoal_emprestimo") + labs(title="Distribuição do empréstimo \npessoal", x="Empréstimo pessoal", y="Proporção")
+p2=relacione(data_tl, "pessoal_emprestimo") + labs(title="Resposta de acordo com\n o empréstimo pessoal", x="Resposta", y="Proporção") + scale_fill_brewer(name="Empréstimo pessoal")
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot10-pessoal-emprestimo.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot10-pessoal-emprestimo.png", width = 6.5, height = 4, dpi=1000)
 #Tipo de contato 
 table(data_tl$tipo_contato, data_tl$resposta)
 p1=do_bar(data_tl, "tipo_contato", ordem = rev(c("Telefone","celular"))) + labs(title="Distribuição do tipo de ligação", x="Tipo de ligação", y="Proporção")
-p2=relacione(data_tl, "tipo_contato") + labs(title="Resposta de acordo com o tipo de ligação", x="Resposta", y="Proporção") + scale_fill_brewer(name="Tipo de ligação")
+p2=relacione(data_tl, "tipo_contato") + labs(title="Resposta de acordo \n com o tipo de ligação", x="Resposta", y="Proporção") + scale_fill_brewer(name="Tipo de ligação")
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot11-tipo-ligacao.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot11-tipo-ligacao.png", width = 6.5, height = 4, dpi=1000)
 #dia da semana
 table(data_tl$dia, data_tl$resposta)
-p1=do_bar(data_tl, "dia", ordem=c("seg","ter", "qua", "qui", "sex")) + labs(title="Distribuição do dia da semana que o cliente foi contatado", x="Dia da semana", y="Proporção") 
-p2=relacione(data_tl, "dia", ordem = c("seg","ter", "qua", "qui", "sex")) + labs(title="Resposta de acordo o dia da semana contatado", x="Resposta", y="Proporção") + scale_fill_brewer(name="Dia da semana")
+p1=do_bar(data_tl, "dia", ordem=c("seg","ter", "qua", "qui", "sex")) + labs(title="Distribuição do dia da semana \n que o cliente foi contatado", x="Dia da semana", y="Proporção") 
+p2=relacione(data_tl, "dia", ordem = c("seg","ter", "qua", "qui", "sex")) + labs(title="Resposta de acordo o \n dia da semana contatado", x="Resposta", y="Proporção") + scale_fill_brewer(name="Dia da semana")
 
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot12-dia.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot12-dia.png", width = 6.5, height = 5, dpi=1000)
 
 
 #mes table(data_tl$mes, data_tl$resposta)
 p1=do_bar(data_tl, "mes", ordem = c("jan", "feb", "mar", "abril", "maio", "junho", 
-                                 "julho", "aug", "sep", "oct", "nov", "dec")) + labs(title="Distribuição do mês que o cliente doi contatado", x="Mês", y="Proporção")
+                                 "julho", "aug", "sep", "oct", "nov", "dec")) + labs(title="Distribuição do mês que\n o cliente doi contatado", x="Mês", y="Proporção")
 
 p2=relacione(data_tl, "mes", ordem = c("jan", "feb", "mar", "abril", "maio", "junho", 
                                     "julho", "aug", "sep", "oct", "nov", "dec")) + 
   labs(title="Resposta de acordo com o mês \nque o cliente foi contatado", x="Resposta", y="Proporção") + scale_fill_brewer(name="Mês")
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot13-mes.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot13-mes.png", width = 6.5, height = 4, dpi=1000)
 #duracao da ligação
 summary(data_tl$duracao)
 sd(data_tl$duracao)
@@ -279,7 +279,7 @@ maximo_duracao = which.max(data_tl$duracao)
 #histograma todas as obs
 p1=ggplot(data_tl, aes(x=duracao)) + 
   geom_histogram(col='white', fill="dodgerblue") + 
-  theme_minimal() + labs(title="Distribuição do tempo de duração da última ligação", 
+  theme_minimal() + labs(title="Distribuição do tempo \n de duração da última ligação", 
                          x="Tempo de duração da última ligação", y="Proporção") + 
   annotate("text", x=3000,y=15000, 
            label = "Média: 258.3\n Mediana: 319\n Máximo: 4918\n Desvio padrão: 259.2")
@@ -293,7 +293,7 @@ data_tl %>%
   ggplot(aes(x=duracao, fill=resposta)) + 
   geom_histogram(col='black', aes(y=..density..)) + 
   scale_fill_brewer(palette = "Set3") + 
-  theme_minimal() + labs(title="Distribuição do tempo de duração da última ligação", x="Tempo de duração da última ligação", y="Densidade") + scale_fill_brewer(name="Resposta")
+  theme_minimal() + labs(title="Distribuição do tempo \nde duração da última ligação", x="Tempo de duração da última ligação", y="Densidade") + scale_fill_brewer(name="Resposta")
 
 
 p2=data_tl %>% 
@@ -303,15 +303,15 @@ p2=data_tl %>%
   geom_histogram(col='black', aes(y=..density..)) + 
   facet_grid(~resposta) + 
   theme_minimal() + 
-  labs(title="Distribuição do tempo de duração da última\n ligação por resposta", x="Tempo de duração da última ligação", y="Densidade")
+  labs(title="Distribuição do tempo de duração \nda última ligação por resposta", x="Tempo de duração da última ligação", y="Densidade")
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot14-tempo.png", width = 10, height = 5, dpi=1000)
+ggsave(p2, file="plots/plot14-tempo.png", width = 6, height = 4, dpi=1000)
 
 #chamadas 
 summary(data_tl$chamadas)
 
 p1=do_bar(data_tl, "chamadas") + 
-  theme(axis.text.x = element_text(angle=90)) + labs(title="Distribuição do número de ligações para o mesmo cliente", x="Número de ligações para o mesmo cliente", y="Proporção")
+  theme(axis.text.x = element_text(angle=90)) + labs(title="Distribuição do \n número de ligações\n para o mesmo cliente", x="Número de ligações para o mesmo cliente", y="Proporção")
 
 maximo_chamadas = which.max(data_tl$chamadas)
 
@@ -324,16 +324,16 @@ data_tl$chamadas_agr = cut(data_tl$chamadas,
                                       "41-50", "51-60"))
 
 #distribuição
-p2=relacione(data_tl, "chamadas_agr") + labs(title="Resposta de acordo com o número de ligações para o mesmo cliente", x="Resposta", y="Proporção") + 
+p2=relacione(data_tl, "chamadas_agr") + labs(title="Resposta de acordo com o \n número de ligações \n para o mesmo cliente", x="Resposta", y="Proporção") + 
   scale_fill_brewer(name="Número de ligações")
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot15-num-chamadas.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot15-num-chamadas.png", width = 6.5, height = 4, dpi=1000)
 
 
 #chamadas_previas (numéro de ligações antes)
 table(data_tl$chamadas_prev, data_tl$resposta)
 p1=do_bar(data_tl, "chamadas_prev") + 
-  labs(title="Distribuição do números de ligações feitas \nantes da campanha publicitária para o cliente",
+  labs(title="Distribuição do números de ligações \n feitas antes da campanha \n publicitária para o cliente",
        x="Números de ligações", y="Proporção")
 
 p2=relacione(data_tl, "chamadas_prev") + 
@@ -341,21 +341,21 @@ p2=relacione(data_tl, "chamadas_prev") +
        y="Proporção") + 
   scale_fill_brewer(name="Chamadas prévias")
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot16-chamadas-previas.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot16-chamadas-previas.png", width = 6.5, height = 4, dpi=1000)
 #dias sem ligar #variável será descartada
 
 table(data_tl$pausa)
 do_bar(data_tl, "pausa") + labs(title="Distribuição do número de dias que passaram após a última ligação", x="Número de dias que passaram após a última ligação", y="Proporção")
-ggsave("plots/plot17-pausa.png", width = 10, height = 5, dpi=1000)
+ggsave("plots/plot17-pausa.png", width = 6, height = 4, dpi=1000)
 #campanhas anteriores
 table(data_tl$status_prev, data_tl$resposta)
-p1=do_bar(data_tl, "status_prev", ordem=c("sucesso", "falha", "inexistente")) + labs(title="Distribuição do resultado da campanha publicitária anterior", x="Resultado da campanha publicitária anterior", y="Proporção")
+p1=do_bar(data_tl, "status_prev", ordem=c("sucesso", "falha", "inexistente")) + labs(title="Distribuição do resultado \n da campanha publicitária anterior", x="Resultado da campanha publicitária anterior", y="Proporção")
 p2=relacione(data_tl, "status_prev", ordem = c("sucesso", "falha", "inexistente")) + 
-  labs(title="Resposta de acordo com \no resultado da campanha publicitária anterior", 
+  labs(title="Resposta de acordo com \no resultado da campanha \n publicitária anterior", 
        x="Resposta", y="Proporção")  + scale_fill_brewer(name="Resultado")
 
 pg = grid.arrange(p1, p2, nrow = 1)
-ggsave(pg, file="plots/plot17-status-prev.png", width = 10, height = 5, dpi=1000)
+ggsave(pg, file="plots/plot17-status-prev.png", width = 6.5, height = 4, dpi=1000)
 
 
 #variacao_emprego
@@ -376,7 +376,7 @@ dfve %>% filter(Var2 == "sim") %>%
   labs(title="Proporção de sucessos pela taxa de variação de emprego", x="Taxa de variação de emprego", y="Proporção de Y=1") + 
   theme_bw()
 
-ggsave("plots/plot18-variacao-taxa-empregados.png", width = 10, height = 5, dpi=1000)
+ggsave("plots/plot18-variacao-taxa-empregados.png", width = 6, height = 4, dpi=1000)
 
 
 #Indice de preços
@@ -390,7 +390,7 @@ data_tl$ipc %>% table(data_tl$resposta) %>% prop.table(margin=1) %>%
   geom_point() + 
   theme_bw() + 
   theme(axis.text.x = element_text(angle=90)) + labs(title="Proporção de sucessos pelo índice de preços do consumidor", x="Índice de preços do consumidor", y="Proporção de sucessos")
-ggsave("plots/plot19-ipc.png", width = 10, height = 5, dpi=1000)
+ggsave("plots/plot19-ipc.png", width = 6, height = 4, dpi=1000)
 
 #histograma
 data_tl$ipc %>% table(data_tl$resposta) %>% prop.table(margin=1) %>% 
@@ -415,7 +415,7 @@ data_tl$eu_taxa %>% table(data_tl$resposta) %>% prop.table(margin=1) %>%
                          x="Taxa Euribor 3 meses", y="Proporção de sucessos") + 
   theme_bw() 
 
-ggsave("plots/plot20-euribor.png", width = 10, height = 5, dpi=1000)
+ggsave("plots/plot20-euribor.png", width = 6, height = 4, dpi=1000)
 
 
 
@@ -438,7 +438,7 @@ ggcorrplot(cor(data_tl[,sapply(data_tl, FUN=is.numeric)], method='spearman'), hc
            ggtheme=theme_bw)
 
 
-ggsave("plots/plot21-correlograma.png", width = 5, height = 5, dpi=1000)
+ggsave("plots/plot21-correlograma.png", width = 6, height = 4, dpi=1000)
 
 
 #elimando colunas que não são úteis para a modelagem
@@ -609,7 +609,7 @@ ggplot(data.frame(h=h,y=fitted(modelo3)), aes(x=y,y=h)) +
   labs(title="Pontos de alavanca", x=" Valores preditos", y="Medida h") + 
   theme_bw()
 
-ggsave(file="plots/plot22-medida-h.png", width = 10, height = 7, dpi=1000)
+ggsave(file="plots/plot22-medida-h.png", width = 6, height = 4, dpi=1000)
 
 #distância de cook
 ggplot(data.frame(x=1:length(di), di=di), aes(x,di)) + 
@@ -617,7 +617,7 @@ ggplot(data.frame(x=1:length(di), di=di), aes(x,di)) +
   annotate(geom = "text", x=12500, y=0.22, label = "11223") + 
   theme_bw() + 
   labs(title="Pontos de influência", x="Índice", y="Distância de Cook")
-ggsave(file="plots/plot23-distancia-cook.png", width = 10, height = 7, dpi=1000)
+ggsave(file="plots/plot23-distancia-cook.png", width = 6, height = 4, dpi=1000)
 
 
 #modelo sem as obervações influentes
@@ -643,7 +643,7 @@ ggplot(data.frame(x=1:length(td), y=td), aes(x,y)) +
   geom_hline(yintercept = 2, col='blue') + 
   theme_bw() + 
   labs(y="Componentes do desvio", x="Índice", title="Outliers")
-ggsave("plots/plot24-outilers.png", width = 10, height = 7, dpi=1000)
+ggsave("plots/plot24-outilers.png", width = 6, height = 4, dpi=1000)
 
 #####envelope
 library(doParallel)
@@ -704,14 +704,15 @@ ggplot(data.frame(e1x,e1y, e2x,e2y,medx,medy,td,x,y), aes(x=x, y=y)) +
   geom_line(aes(x=e1x,y=e1y), size=1, col='blue', show.legend = T) + 
   geom_line(aes(x=e2x,y=e2y), size=1, col='blue') + 
   geom_line(aes(x=medx,y=medy), size=1, col='grey') +
-  theme_minimal() +labs(title="Gráfico de envelope", x="Percentis N(0,1)",y="Resíduos")
-ggsave("plots/plot25-envelope.png", width = 10, height = 7, dpi=1000)
+  theme_bw() +labs(title="Gráfico de envelope", x="Percentis N(0,1)",y="Resíduos")
+ggsave("plots/plot25-envelope.png", width = 6, height = 4, dpi=1000)
 ########################3333
 #curva ROC
 library(Epi)
-jpeg('rplot.jpg', width = 10, height = 8, units = 'in', res=1000)
+png('plots/rplot.png', width = 6, height = 4, units = 'in', res=1000)
 ROC(form=ybin ~ trabalho + tipo_contato + mes + dia + duracao + chamadas + 
       status_prev + ipc + eu_taxa + empregados, data=treino, MI=FALSE, plot='ROC')
+dev.off()
 
 #validacao 
 logitpv = predict(modelo3, validacao[1:10000,]) #logit da validacao
@@ -731,7 +732,7 @@ ggplot(data.frame(obs=1:length(pv), pv, clf, Resposta=factor(resp)),
   labs(x="Observações", y="Predito") + 
   theme_bw()
 
-ggsave("plots/plot27-sensibilidade.png", width = 7, height = 6, dpi=1000)
+ggsave("plots/plot27-sensibilidade.png", width = 6, height = 4, dpi=1000)
 
 
 ##fazer shiny com especificidade, gráfico, 
