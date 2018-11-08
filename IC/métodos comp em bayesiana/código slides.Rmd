@@ -1,0 +1,463 @@
+---
+title: "Métodos Computacionais em Estatística Bayesiana"
+author: "Pedro Araújo"
+date: "8 de novembro de 2018"
+output: ioslides_presentation
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+```
+
+
+
+
+## Conteúdo
+<style type="text/css">
+ body p {
+  color: #000000;
+}
+</style>
+
+- Método da Rejeição
+- SIR
+- Metropolis-Hastings
+- Gibbs Sampler
+
+## Método da Rejeição
+
+Seja $X$ e $Y$ variáveis aleatórias com densidades $f$ e $g$ respectivamente. Suponha que exista uma constante $c$ tal que:
+$$\frac{f(t)}{g(t)}\leq c $$
+Então, o método da rejeição pode ser aplicado para gerar $X$.
+
+## Algoritmo
+- Gere $y\sim g$
+- Gere $u \sim \text{Unif}(0,1)$
+- Se $u\leq f(y)/(cg(y))$ aceite $y$ para a amostra final, fazendo $x=y$, caso contrário rejeite. Repita o passo inicial.
+
+## Exemplo 
+Suponha $X|\mu\sim N(\mu, \sigma^2)$, $\sigma^2$ conhecido. E $\mu\sim N(a,b)$. Denote a verossimilhança por $f(x\mid\mu)$ e a priori como $f(\mu)$. Nós sabemos que o valor que maximiza $f(x\mid \mu)$ é $\hat{\mu}=\bar{x}$. Logo:
+$$\pi(\mu\mid x) = cf(x\mid \mu)f(\mu) \leq cf(x\mid \hat{\mu})f(\mu)=kf(\mu)$$
+
+## 
+Portando, podemos gerar $\mu_{i}$ da priori e $U_{i}$ de uma unif(0,1), aceitando se:
+$$u_{i}\leq\frac{cf(x\mid \mu)f(\mu)}{cf(x\mid \hat{\mu})f(\mu)}=\frac{f(x\mid \mu_{i})}{f(x\mid \hat{\mu})}$$
+Logo, no final do dia, basta usar a regra de aceitação:
+
+$$u_{i}\leq \frac{f(x\mid \mu_{i})}{f(x\mid \hat{\mu})}$$
+
+## Algoritmo em R
+
+```{r eval = T, echo = T}
+set.seed(10)
+#gerando dados de uma normal(2,5), X|mu ~ N(2, 5)
+x = rnorm(100, mean=2, sd=sqrt(5))
+#gerando u ~ unif(0,1)
+u = runif(1000)
+#gernado mu ~ N(0,100)
+mu = rnorm(1000, 0, 10)
+
+```
+
+##
+
+```{r eval=F, echo=T}
+n = length(x)
+sigma2 = 5
+f = numeric(1000)
+#f(x|lambda)
+for(i in 1:1000){
+  f[i] = ((2*pi*sigma2)^(-n/2))*exp(-sum((x-mu[i])^2)/(2*sigma2))
+} 
+#f(x|mean(x))
+g = ((2*pi*sigma2)^(-n/2))*exp(-sum((x-mean(x))^2)/(2*sigma2))
+#valores selecionados
+selecionados = u < f/g
+sum(selecionados) # quantidade de selecionados
+#amostra final
+amostraFinal = mu[selecionados]
+```
+
+
+## 
+
+```{r ir}
+
+inputPanel(
+  numericInput("media", label = "Média", value=0),
+  numericInput("variancia",label="variância", value=100),
+  numericInput("tamanho", label="n", value=100)
+  
+)
+
+
+renderPlot({
+  u = runif(input$tamanho)
+  #gerando mu ~ N(0,100)
+
+  mu = rnorm(input$tamanho, input$media, sqrt(input$variancia))
+  n = length(x)
+  sigma2 = 5
+  f = numeric(input$tamanho)
+  #f(x|lambda)
+  for(i in 1:input$tamanho){
+    f[i] = ((2*pi*sigma2)^(-n/2))*exp(-sum((x-mu[i])^2)/(2*sigma2))
+  } 
+  #f(x|mean(x))
+  g = ((2*pi*sigma2)^(-n/2))*exp(-sum((x-mean(x))^2)/(2*sigma2))
+  #valores selecionados
+  selecionados = u < f/g
+  sum(selecionados) # quantidade de selecionados
+  #amostra final
+  amostraFinal = mu[selecionados]
+  
+  hist(amostraFinal, freq = F)
+  xx = seq(min(amostraFinal), max(amostraFinal), 0.01)
+  m = input$media
+  v = input$variancia
+  lines(xx, dnorm(xx, (v*sum(x)+m*sigma2)/(n*v+sigma2), 
+     sqrt((sigma2*v)/(n*v+sigma2))), col='red')
+
+})
+
+
+
+
+
+```
+
+
+## SIR
+
+A ideia por trás do SIR está em amostrar de uma distribuição $g$, que também será um envelope, mas priorizar valores que são mais prováveis de serem da distribuição alvo $f$. O peso utilizado para corrigir a probabilidade de sorteio é 
+$$w(x_{i})=\frac{f(x_{i})/g(x_{i})}{\sum_{i=1}^{m}f(x_{i})/g(x_{i})}$$
+
+## Algoritmo
+- Gere $y_{1},...,y_{m}$ iid de $g$
+- Calcule $w_{1},...,w_{m}$
+- Sorteie entre os $y_{1},...,y_{m}$ $n$ com probabilidade $w_{1},..,w_{m}$, faça os valores selecionados $x_{1},..,x_{n}$ valores da distribuição alvo.
+
+## Exemplo
+
+Voltando ao exemplo anterior, para o SIR, em um contexto bayesiano, basta gerar valores de $\mu_{1},..,\mu_{m}$ e reamostrar com pesos baseados na verossimilhança.
+
+- Gere $\mu_{1}, ... ,\mu_{m}$ da distribuição a priori
+- Calcule $w_{i}=\frac{f(X\mid\mu_{i})}{\sum_{i=1}^{m}f(X\mid \mu_{i})}$
+- Reamostre de $\mu_{1}, ... ,\mu_{m}$ com probabilidade $w_{i},...,w_{m}$ uma amostra final.
+
+
+## Algoritmo em R
+
+```{eval=F, echo=T}
+m = 100000 #tamanho da amostra gerada da posteriori
+nn = 1000 #tamanho da amostra reamostragem final
+mu = rnorm(m, 0, 10) #gerando mu da priori mu ~ N(0, 10) 
+#calculando f(x|mu)
+f = numeric(m) 
+for(i in 1:1000){
+  f[i] = ((2*pi*sigma2)^(-n/2))*exp(-sum((x-mu[i])^2)/(2*sigma2))
+} 
+w=f/sum(f) #pesos
+amostraFinal = sample(mu, nn, p=w, replace = T) #reamostrando da amostra final
+
+```
+
+
+## 
+```{r sir}
+inputPanel(
+  numericInput("media", label = "Média", value=0),
+  numericInput("variancia",label="variancia", value=100),
+  numericInput("tamanhom", label="m", value=1000),
+  numericInput("tamanhon", label="n", value=100)
+  
+)
+
+renderPlot({
+  mm = input$tamanhom #tamanho da amostra gerada da posteriori
+  nn = input$tamanhon #tamanho da amostra reamostragem final
+  mu = rnorm(mm, input$media, sqrt(input$variancia)) #gerando mu da priori mu ~ N(0, 10) 
+  sigma2 = 5
+  n = length(x)
+  #calculando f(x|mu)
+  f = numeric(mm) 
+  for(i in 1:mm){
+    f[i] = ((2*pi*sigma2)^(-n/2))*exp(-sum((x-mu[i])^2)/(2*sigma2))
+  } 
+  w=f/sum(f) #pesos
+  amostraFinal = sample(mu, nn, p=w, replace = T)
+  hist(amostraFinal, freq = F)
+  xx = seq(min(amostraFinal), max(amostraFinal), 0.01)
+  m = input$media
+  v = input$variancia
+  lines(xx, dnorm(xx, (v*sum(x)+m*sigma2)/(n*v+sigma2), 
+     sqrt((sigma2*v)/(n*v+sigma2))), col='red')
+  
+})
+
+
+```
+
+
+## Metropolis-Hastings
+É um método de geração de variáveis aleatórias usando cadeias de Markov. Tal método gera uma cadeia no qual a distribuição estacionária (caso ela exista) é a distribuição de interesse.
+
+## Algoritmo
+Sendo $f$ a distribuição alvo, comece inicializando a cadeia $x^{(0)}=k$
+
+- Amostre um candidato $x^{*}$ de uma distribuição proposta $g(.\mid x^{(t)})$
+- Calcule $R(x^{*}, x^{(t)})=\frac{f(x^{*})g(x^{(t)}\mid x^{*})}{f(x^{(t)})g(x^{*}\mid x^{(t)})}$
+- Gere $u\sim U(0,1)$
+- Se $R \geq u$, faça $x^{(t+1)}=x^{*}$, caso contrário $x^{(t+1)}=x^{t}$ e volte ao 
+passo inicial
+
+
+## Bayesiana
+Em um contexto bayesiano há diversas adaptações do algoritmo Metropolis-Hastings. O modo mais simples é assumindo que $f(x^{*}\mid x^{(t)})=f(x^{*})$ e assumindo a priori como a distribuição $g$. 
+Levando a:
+
+$$R(\theta^{(t)}\mid \theta^{*})=\frac{f(x\mid\theta^{*})}{f(x\mid\theta^{(t)})}$$
+
+
+## Exemplo
+Continuando no exemplo anterior, assumindo $g(.\mid a)$ uma $N(a, 2.5^2)$
+$$R(\mu^{(t)},\mu^{*})=\frac{f(x\mid \mu^{*})f(\mu^{*})g(\mu^{(t)}\mid\mu^{*})}{f(x\mid \mu^{(t)})f(\mu^{(t)})g(\mu^{*}\mid\mu^{(t)})}$$
+
+## Diagnóstico
+
+Lembrando que o objetivo final é gerar uma amostra iid da distribuição alvo. Entretanto, utilizamos uma cadeia de Markov (há autocorrelação). Precisamos garantir que autocorelação seja baixa e que de fato ocoreu a convergência da cadeia para a distribuição estacionária.
+
+
+## ACF 
+
+```{r echo=F}
+set.seed(10)
+#gernado dados de uma pois(2), X|mu ~ N(2, 5)
+x = rnorm(100, mean=2, sd=sqrt(5))
+mu = numeric(1000)
+mu[1] = 0
+
+
+i = 2
+
+
+for(i in 2:1000) {
+  muprop = rnorm(1, mu[i-1], 2.5);muprop
+  
+  a=sum(dnorm(x, mean=muprop, sd=sqrt(5), log=T)) + dnorm(muprop, 0, 3, log=T) + dnorm(mu[i-1], muprop, 2.5)
+  b=sum(dnorm(x, mean=mu[i-1], sd=sqrt(5), log=T)) + dnorm(mu[i-1], 0, 3, log=T) + dnorm(muprop, mu[i-1], 2.5)
+  a
+  b
+  p = exp(a-b);p
+  u = runif(1)
+  u >= p
+  
+  if(u<=p) {
+    mu[i] = muprop
+  }else{
+    mu[i] = mu[i-1]
+  }  
+}
+
+acf(mu)
+
+```
+
+## Convergência
+
+```{r echo=F}
+plot(mu, type='l', main='trace plot')
+
+```
+
+
+##
+```{r echo=F}
+plot(cumsum(mu)/1:length(mu), main="Média ergódica", type='l')
+```
+
+
+## 
+
+
+```{r mh}
+inputPanel(
+  numericInput("media", label = "Média", value=0),
+  numericInput("variancia",label="variancia", value=100),
+  numericInput("tamn", label="n", value=5000),
+  numericInput("varg", label="var de g", value=2),
+  numericInput("burn", label="Burn-in", val=100),
+  numericInput("lag", label="lag", val=1)
+  
+)
+
+renderPlot({
+  mu = numeric(input$tamn)
+  mu[1] = 0
+  
+  m = input$media
+  v = input$variancia
+  vg = input$varg
+  sigma2 = 5
+
+  for(i in 2:input$tamn) {
+    muprop = rnorm(1, mu[i-1], 2.5);muprop
+    
+    a=sum(dnorm(x, mean=muprop, sd=sqrt(5), log=T)) + dnorm(muprop, 0, sqrt(v), log=T) + dnorm(mu[i-1], muprop, sqrt(vg))
+    b=sum(dnorm(x, mean=mu[i-1], sd=sqrt(5), log=T)) + dnorm(mu[i-1], 0, sqrt(v), log=T) + dnorm(muprop, mu[i-1], sqrt(vg))
+    a
+    b
+    p = exp(a-b);p
+    u = runif(1)
+    u >= p
+    
+    if(u<=p) {
+      mu[i] = muprop
+    }else{
+      mu[i] = mu[i-1]
+    }  
+  }
+  
+  
+  amostraFinal = mu[-c(1:input$burn)][seq(1, length(mu[-c(1:input$burn)]), input$lag)]
+  n = length(x)
+  hist(amostraFinal, freq = F)
+  xx = seq(min(amostraFinal), max(amostraFinal), 0.01)
+  m = input$media
+  v = input$variancia
+  lines(xx, dnorm(xx, (v*sum(x)+m*sigma2)/(n*v+sigma2), 
+     sqrt((sigma2*v)/(n*v+sigma2))), col='red')
+  
+})
+
+
+```
+
+## Gibbs
+
+O Gibbs é um caso especial do Metropolis-Hastings. Nesse método amostramos de distribuições multivariadas através de suas condicionais.
+
+Seja uma distribuição $f(\theta_{1},...,\theta_k)$.
+
+- Gere $\theta_{1}^{(t)}\sim (\theta_{1}^{(t)}\mid\theta_{2}^{(t-1)},\theta_{3}^{(t-1)},...,\theta_{k}^{(t-1)})$
+- Gere $\theta_{2}^{(t)}\sim$ $(\theta_{2}^{(t)}\mid\theta_{1}^{(t)},\theta_{3}^{(t-1)},...,\theta_{k}^{(t-1)})$
+- Gere $\theta_{3}^{(t)}\sim$ $(\theta_{3}^{(t)}\mid\theta_{1}^{(t)},\theta_{2}^{(t)},...,\theta_{k}^{(t-1)})$
+
+...
+
+Até gerar todos os parâmetros.
+
+
+## Vantagens 
+
+- Converge mais rápido 
+- Menor autocorrelação
+- Não é necessário escolher uma distribuição de base
+
+
+Possui a desvantagem de na grande maioria das vezes a conta da condicional completa ser muito complicada
+
+
+## Exemplo
+Considere o modelo $Y_{i}=\beta_{1}x_{i}+e_{i}$, $e_{i}\sim N(0,\sigma^2)$.
+
+
+Encontrar a distribuição  $\pi(\beta_{1},\sigma^2\mid X)$ assumindo uma priori normal para o beta e GI para $\sigma^2$ é um pouco complicado (mas possível).
+
+Tome $\beta_{1}\sim N(m1, v1)$ e $\sigma^2\sim GI(a,b)$
+
+Utilizando Gibbs, temos que: 
+
+- $(\beta_{1}\mid \sigma^2,X)\sim N(m_{p}, v_{p})$
+- $(\sigma^2\mid\beta_{1},X)\sim GI(a_{p}, b_{p})$
+
+## 
+Onde: $$m_{p}=\frac{v_{1}\sum_{i=1}^{n}x_{i}y_{i} + m_{1}\sigma^2}{v_{1}\sum x^2 + \sigma^2} \:\:\: v_{p}=\frac{\sigma^2v_{1}}{v_{1}\sum x^2 + \sigma^2}$$
+
+$$a_{p}=(n/2)+a+1\:\:\:\: b_{p}=\frac{\sum(y-x\beta_{1})^2}{2}+b$$
+Algoritmo:  
+
+- Gere $\beta_{1}^{(t)}\sim \beta_{1}\mid \sigma^{(t-1)}, X$
+- Gere $\sigma^{(t)}\sim \sigma^2\mid \beta_{1}^{(t)},X$
+
+
+## No R
+
+```{r echo=T, eval=F}
+for(i in 2:iter) {
+  mb1 = (v1*sum(y*x) + sigma2[i-1]*m1)/(sum(x^2)*v1+sigma2[i-1]);mb1
+  vb1 = (sigma2[i-1]*v1)/(sum(x^2)*v1+sigma2[i-1]);vb1
+  b1[i] = rnorm(1, mb1, sqrt(vb1));b1[i]
+  
+  ap = (n/2) + a + 1;ap
+  bp = sum((y-b1[i]*x)^2) + b;bp
+  sigma2[i] = rinvgamma(1, ap, bp);sigma2[i]
+}
+
+```
+
+
+
+```{r echo = F}
+library(invgamma)
+n = 40
+xx = rnorm(n, 30, 5)
+y = 10*xx + rnorm(n, 0, 7)
+
+iter = 1000
+
+b1 = numeric(iter)
+sigma2 = numeric(iter)
+
+b1[1] = 0
+sigma2[1] = 1
+
+m1 = 0
+v1 = 100
+a = 10
+b = 100
+
+for(i in 2:iter) {
+  mb1 = (v1*sum(y*xx) + sigma2[i-1]*m1)/(sum(xx^2)*v1+sigma2[i-1]);mb1
+  vb1 = (sigma2[i-1]*v1)/(sum(xx^2)*v1+sigma2[i-1]);vb1
+  b1[i] = rnorm(1, mb1, sqrt(vb1));b1[i]
+  
+  ap = (n/2) + a + 1;ap
+  bp = (sum((y-b1[i]*xx)^2)/2) + b;bp
+  sigma2[i] = rinvgamma(1, ap, bp);sigma2[i]
+}
+
+
+```
+
+## 
+
+Se $Y_{i} = 10x_{i} + e_{i}$, $e_{i}\sim N(0, 7^2)$  
+$a=10$, $b=100$  
+$m_{1}=0$, $v_{1}=100$ 
+
+
+## ACF
+```{r echo=F}
+par(mfrow=c(1,2))
+acf(b1)
+acf(sigma2)
+```
+
+
+## Convergência
+```{r echo=F}
+par(mfrow=c(1,2))
+plot(b1, type='l', main="Trace plot")
+plot(sigma2, type='l', main='Trace plot')
+```
+
+
+
+
+
+
+
+
