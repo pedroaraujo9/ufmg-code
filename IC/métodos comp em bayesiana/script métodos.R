@@ -26,7 +26,7 @@ selecionados = u < f/g
 sum(selecionados)/1000
 
 #amostra final
-amostraFinal = lamb[selecionados]
+amostraFinal = mu[selecionados]
 
 
 #### SIR
