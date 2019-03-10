@@ -4,8 +4,7 @@ library(foreach)
 
 envelope = function(modelo, parallel = T) {
   h = influence(modelo)$hat
-  a = max(td)
-  b = min(td)
+
   
   cl = makeCluster(detectCores())
   registerDoParallel(cl)
@@ -13,8 +12,8 @@ envelope = function(modelo, parallel = T) {
   X = model.matrix(modelo)
   n = nrow(X)
   p = ncol(X)
-  td = resid(modelo,type="deviance")/sqrt(1-h)
-  e = matrix(0,n,100)
+  td = resid(modelo, type="deviance")/sqrt(1-h)
+  e = matrix(0, n, 100)
   
   if(parallel == T) {
     e = foreach(i=1:100, .combine = "cbind") %dopar% {
