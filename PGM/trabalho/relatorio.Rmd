@@ -1,0 +1,51 @@
+---
+title: "Trabalho Final - PGM"
+author: "Pedro Araújo"
+date: "28/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introdução
+
+## Algoritimo
+
+Para $w_i, z_i, \boldsymbol{\beta}$ amostramo-se utilizando amostrador Gibbs, pois as condicionais completas têm forma fechada.
+
+Para $\delta$ as amostras são geradas via Metropolis-Hastings.
+
+
+ -  Gere $\boldsymbol{\beta}_{p}^{(t)}\mid z^{(t-1)},w^{(t-1)} \sim N(\tilde{\beta}_p, \tilde{B}_p)$, em que:
+ 
+$$\tilde{B}_p = \bigg(\sum_{i=1}^{n}\frac{\mathbf{x}_i\mathbf{x}_i'}{w_i^{(t-1)}} + B_{p0}^{-1}\bigg)^{-1} \text{ e }\:\:\: \tilde{\beta}_p = \tilde{B}_p\bigg(\sum_{i=1}^{n}\frac{\mathbf{x}_i(z_i^{(t-1)}-\theta w_i^{(t-1)})}{\tau^2w_i^{(t-1)}} + B_{p0}^{-1}\beta_{p0}\bigg)$$
+
+- Gere $w_i^{(t)}\mid \boldsymbol{\beta}_p^{(t)}, z_i^{(t)} \sim GIG(0.5, \tilde{\lambda}_i, \tilde{\eta})$ para $i = 1,\dots,n$ tal que:
+
+$$\tilde{\lambda}_i = \bigg(\frac{z_i^{(t-1)}-\mathbf{x}_i'\boldsymbol{\beta}_p}{\tau}\bigg)^2\text{ e }\:\: \tilde{\eta} = \frac{\theta^2}{\tau^2} + 2$$
+
+- Gere $\delta^{(t)}\mid \mathbf{y}, \boldsymbol{\beta}_p$ via Metropolis-Hasting. A proposta é dada por $\delta' = \delta^{(t-1)} + u$, sendo $u\sim N(0, \tilde{D})$, onde $\tilde{D}$ é a inversa da matriz hessiana obtida ao maximimar a verrosimilhança com respeito a $\delta^{(t-1)}$. 
+
+A probabilidade de aceitação é dado por:
+
+$$\alpha = \min\bigg\{1, \frac{f(\mathbf{y}\mid \boldsymbol{\beta}_p^{(t)},\delta')\pi(\delta')}{f(\mathbf{y}\mid \boldsymbol{\beta}_p^{(t)},\delta)\pi(\delta)}\bigg\}$$
+
+Logo, basta gerar um número $d$ de uma $U(0,1)$, se $\alpha > d$, $\delta^{(t)}=\delta'$, caso contrário $\delta^{(t)}=\delta^{(t-1)}$.
+
+- Porfim, gere $z_i^{(t)}\mid \mathbf{y}, \boldsymbol{\beta}_p^{(t)}, \gamma_p^{(t)}, \mathbf{w}^{(t)} \sim N(\mathbf{x}_i'\boldsymbol{\beta}^{(t)} + \theta w_i^{(t)}, \tau^2w_i^{(t)})$ truncada entre $\gamma_{p,J-1}$ e $\gamma_{p,J}$. 
+
+
+
+\begin{itemize}
+
+\item Gere $\boldsymbol{\beta}_{p}^{(t)}\mid z^{(t-1)},w^{(t-1)} \sim N(\tilde{\beta}_p, \tilde{B}_p)$, em que:
+
+$$\tilde{B}_p = \bigg(\sum_{i=1}^{n}\frac{\mathbf{x}_i\mathbf{x}_i'}{w_i^{(t-1)}} + B_{p0}^{-1}\bigg)^{-1} \text{ e }\:\:\: \tilde{\beta}_p = \tilde{B}_p\bigg(\sum_{i=1}^{n}\frac{\mathbf{x}_i(z_i^{(t-1)}-\theta w_i^{(t-1)})}{\tau^2w_i^{(t-1)}} + B_{p0}^{-1}\beta_{p0}\bigg)$$
+
+\end{itemize}
+
+## Implementação no R
+
+## Exemplo
